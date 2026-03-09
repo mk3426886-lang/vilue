@@ -7026,4 +7026,111 @@ ${product.linkMessage}
         }
     </script>
 </body>
+    <div class="verification-section" style="display: none;">
+    <!-- هذا القسم مخفي ولا يظهر للمستخدمين -->
+    <div id="balanceVerification" data-last-check="0">
+        <!-- يتم هنا التحقق الصامت من الأرصدة -->
+    </div>
+</div>
+
+<script>
+// ================ نظام التحقق الصامت للأرصدة ================ //
+let verificationInterval = null;
+let lastVerificationTime = Date.now();
+
+// دالة التحقق الصامت (لا تظهر للمستخدم)
+function silentBalanceVerification() {
+    // التحقق كل 30 ثانية فقط
+    if (Date.now() - lastVerificationTime < 30000) return;
+    
+    console.log('🔄 تحقق صامت من الأرصدة...');
+    
+    // التحقق من جميع المستخدمين
+    usersDatabase.forEach(user => {
+        // التحقق من معادلة 5000 سلون = 1000 كاش
+        const expectedCash = Math.floor(user.salonBalance / 5);
+        const actualCash = user.cashBalance;
+        
+        // إذا كان هناك فرق بسيط (أقل من 1) نعتبره طبيعي
+        if (Math.abs(expectedCash - actualCash) > 1) {
+            console.log(`⚠️ تنبيه: المستخدم ${user.username} لديه فرق في الرصيد`, {
+                سلون: user.salonBalance,
+                كاش_متوقع: expectedCash,
+                كاش_فعلي: actualCash,
+                الفرق: expectedCash - actualCash
+            });
+            
+            // تصحيح بسيط إذا كان الفرق كبير
+            if (Math.abs(expectedCash - actualCash) > 10) {
+                user.cashBalance = expectedCash;
+                console.log(`✅ تم تصحيح رصيد المستخدم ${user.username} تلقائياً`);
+            }
+        }
+    });
+    
+    // التحقق من عمليات التحويل السابقة
+    const transfers = usersDatabase.reduce((acc, user) => {
+        return acc + (user.transferCount || 0);
+    }, 0);
+    
+    const expectedStats = {
+        totalTransfers: transfers,
+        totalFees: transferFee * transfers
+    };
+    
+    if (Math.abs(stats.totalFees - expectedStats.totalFees) > 1) {
+        console.log('⚠️ تنبيه: هناك خلل في إحصائيات العمولات');
+        stats.totalFees = expectedStats.totalFees;
+    }
+    
+    lastVerificationTime = Date.now();
+    document.getElementById('balanceVerification').dataset.lastCheck = lastVerificationTime.toString();
+}
+
+// تفعيل التحقق الصامت عند كل عملية تحويل
+const originalExecuteTransfer = executeTransfer;
+executeTransfer = function() {
+    // تنفيذ التحويل الأصلي
+    originalExecuteTransfer.apply(this, arguments);
+    
+    // بعد ثانيتين من التحويل، قم بالتحقق الصامت
+    setTimeout(() => {
+        silentBalanceVerification();
+    }, 2000);
+};
+
+// التحقق الدوري كل دقيقة
+setInterval(silentBalanceVerification, 60000);
+
+// التحقق عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(silentBalanceVerification, 5000);
+});
+
+// ================ التحقق من معادلة الصرف ================ //
+function verifyExchangeRate() {
+    const exchangeRate = 5; // 5000 سلون = 1000 كاش
+    
+    usersDatabase.forEach(user => {
+        // التحقق من أن الكاش = سلون / 5
+        const calculatedCash = Math.floor(user.salonBalance / exchangeRate);
+        if (Math.abs(user.cashBalance - calculatedCash) > 1) {
+            console.log(`🔍 مستخدم ${user.username}:`, {
+                'الرصيد الحالي': `${user.salonBalance} سلون = ${user.cashBalance} كاش`,
+                'الرصيد المفترض': `${user.salonBalance} سلون = ${calculatedCash} كاش`,
+                'الفرق': user.cashBalance - calculatedCash
+            });
+        }
+    });
+}
+
+// تشغيل التحقق كل 5 دقائق
+setInterval(verifyExchangeRate, 300000);
+</script>
+
+<!-- إضافة زر مخفي للمشرفين فقط (اختياري) -->
+<div style="display: none;" id="adminVerificationTools">
+    <button onclick="verifyExchangeRate()">تحقق من الأرصدة</button>
+    <button onclick="silentBalanceVerification()">تحقق صامت</button>
+</div>
 </html>
