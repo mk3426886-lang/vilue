@@ -7133,4 +7133,209 @@ setInterval(verifyExchangeRate, 300000);
     <button onclick="verifyExchangeRate()">تحقق من الأرصدة</button>
     <button onclick="silentBalanceVerification()">تحقق صامت</button>
 </div>
+    <!-- ========== زر التصفير للأدمن فقط ========== -->
+<div id="adminResetButton" style="display: none; position: fixed; bottom: 20px; right: 20px; z-index: 9999;">
+    <button onclick="confirmFullReset()" 
+            style="background: linear-gradient(135deg, #dc3545, #c82333); color: white; 
+                   border: none; padding: 15px 30px; border-radius: 50px; 
+                   font-size: 16px; font-weight: bold; cursor: pointer; 
+                   box-shadow: 0 4px 15px rgba(220,53,69,0.3);
+                   transition: all 0.3s ease; display: flex; 
+                   align-items: center; gap: 10px;"
+            onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 6px 20px rgba(220,53,69,0.4)'"
+            onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 15px rgba(220,53,69,0.3)'">
+        <i class="fas fa-broom"></i>
+        <span>🧹 تصفير جميع الأرصدة</span>
+    </button>
+</div>
+
+<script>
+// ================ تصفير فوري مع تأكيد (للأدمن فقط) ================ //
+function confirmFullReset() {
+    // التحقق من أن المستخدم أدمن
+    if (!currentUser?.isAdmin) {
+        alert('🚫 هذه الميزة متاحة للأدمن فقط');
+        return;
+    }
+    
+    // نافذة تأكيد جميلة
+    const confirmModal = document.createElement('div');
+    confirmModal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.8);
+        backdrop-filter: blur(5px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        direction: rtl;
+    `;
+    
+    // حساب الإحصائيات
+    const totalUsers = usersDatabase.length;
+    const totalSalon = usersDatabase.reduce((sum, u) => sum + u.salonBalance, 0);
+    const totalCash = usersDatabase.reduce((sum, u) => sum + u.cashBalance, 0);
+    
+    confirmModal.innerHTML = `
+        <div style="background: white; padding: 30px; border-radius: 20px; max-width: 450px; width: 90%; text-align: center;">
+            <i class="fas fa-exclamation-triangle" style="font-size: 4rem; color: #dc3545; margin-bottom: 20px;"></i>
+            <h2 style="color: #333; margin-bottom: 15px;">⚠️ تحذير شديد!</h2>
+            <p style="color: #666; margin-bottom: 20px; line-height: 1.8;">
+                أنت على وشك <strong style="color: #dc3545;">تصفير جميع الأرصدة</strong> بشكل كامل<br>
+                <span style="font-size: 0.9rem;">(جميع المستخدمين + جميع الأدمن)</span>
+            </p>
+            <div style="background: #f8fafd; padding: 20px; border-radius: 15px; margin-bottom: 20px; text-align: right;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #e1e8f0;">
+                    <span style="color: #666;">عدد المستخدمين:</span>
+                    <span style="color: #1e3c72; font-weight: 700;">${totalUsers}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #e1e8f0;">
+                    <span style="color: #666;">إجمالي السلون:</span>
+                    <span style="color: #1e3c72; font-weight: 700;">${totalSalon.toLocaleString()}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: #666;">إجمالي الكاش:</span>
+                    <span style="color: #1e3c72; font-weight: 700;">${totalCash.toLocaleString()}</span>
+                </div>
+            </div>
+            <p style="color: #dc3545; font-size: 0.9rem; margin-bottom: 20px;">
+                <i class="fas fa-info-circle"></i> هذا الإجراء لا يمكن التراجع عنه
+            </p>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="executeFullReset()" style="flex: 1; background: #dc3545; color: white; border: none; padding: 15px; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 1rem;">
+                    <i class="fas fa-check"></i> نعم، صفّر الكل
+                </button>
+                <button onclick="this.closest('.modal-overlay').remove()" style="flex: 1; background: #6c757d; color: white; border: none; padding: 15px; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 1rem;">
+                    <i class="fas fa-times"></i> إلغاء
+                </button>
+            </div>
+        </div>
+    `;
+    
+    confirmModal.className = 'modal-overlay';
+    confirmModal.id = 'resetConfirmModal';
+    document.body.appendChild(confirmModal);
+}
+
+// ================ تنفيذ التصفير الفوري ================ //
+function executeFullReset() {
+    // إغلاق نافذة التأكيد
+    const modal = document.getElementById('resetConfirmModal');
+    if (modal) modal.remove();
+    
+    console.log('🔥 بدء التصفير الفوري...');
+    
+    // إحصائيات قبل التصفير
+    const beforeStats = {
+        users: usersDatabase.length,
+        totalSalon: usersDatabase.reduce((sum, u) => sum + u.salonBalance, 0),
+        totalCash: usersDatabase.reduce((sum, u) => sum + u.cashBalance, 0)
+    };
+    
+    // تصفير الجميع بدون استثناء (بما فيهم الأدمن الأساسي)
+    usersDatabase.forEach(user => {
+        user.cashBalance = 0;
+        user.salonBalance = 0;
+        console.log(`✅ تم تصفير: ${user.username} (${user.email})`);
+    });
+    
+    // تصفير الإحصائيات
+    stats = {
+        totalTransfers: 0,
+        totalWithdraws: 0,
+        totalPurchases: 0,
+        totalFees: 0
+    };
+    
+    // حفظ التغييرات
+    saveDatabase();
+    
+    // تحديث الواجهة
+    if (currentUser) {
+        updateBalances();
+        updateAdminPanel();
+    }
+    
+    console.log('✅ تم التصفير بنجاح');
+    console.log('📊 إحصائيات قبل التصفير:', beforeStats);
+    
+    // رسالة نجاح
+    const successModal = document.createElement('div');
+    successModal.style.cssText = `
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #28a745;
+        color: white;
+        padding: 15px 30px;
+        border-radius: 10px;
+        z-index: 10001;
+        direction: rtl;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        animation: slideDown 0.3s ease;
+    `;
+    successModal.innerHTML = `
+        <i class="fas fa-check-circle"></i>
+        تم تصفير جميع الأرصدة بنجاح (${beforeStats.users} مستخدم)
+    `;
+    document.body.appendChild(successModal);
+    
+    setTimeout(() => {
+        successModal.remove();
+    }, 3000);
+}
+
+// ================ إظهار/إخفاء زر التصفير حسب صلاحيات الأدمن ================ //
+function updateAdminResetButton() {
+    const resetButton = document.getElementById('adminResetButton');
+    if (!resetButton) return;
+    
+    // إظهار الزر فقط للأدمن
+    if (currentUser?.isAdmin) {
+        resetButton.style.display = 'block';
+    } else {
+        resetButton.style.display = 'none';
+    }
+}
+
+// ================ تعديل دالة loginUser لإظهار الزر ================ //
+const originalLoginUser = loginUser;
+loginUser = function() {
+    originalLoginUser.apply(this, arguments);
+    updateAdminResetButton();
+};
+
+// ================ تعديل دالة logout لإخفاء الزر ================ //
+const originalLogout = logout;
+logout = function() {
+    originalLogout.apply(this, arguments);
+    updateAdminResetButton();
+};
+
+// ================ إضافة الأنيميشن ================ //
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideDown {
+        from {
+            top: -100px;
+            opacity: 0;
+        }
+        to {
+            top: 20px;
+            opacity: 1;
+        }
+    }
+`;
+document.head.appendChild(style);
+
+// ================ تحديث الزر عند تحميل الصفحة ================ //
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(updateAdminResetButton, 1000);
+});
+</script>
 </html>
