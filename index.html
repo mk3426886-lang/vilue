@@ -1,0 +1,1173 @@
+Enter<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Vilue - مصرفك الرقمي</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    :root {
+      --bg: #0a0e27; --surface: #131837; --surface2: #1a1f45;
+      --accent: #6c5ce7; --accent2: #a855f7; --gold: #f59e0b;
+      --red: #ef4444; --green: #10b981; --blue: #3b82f6;
+      --text: #e2e8f0; --text2: #94a3b8; --border: rgba(255,255,255,0.06);
+      --radius: 24px;
+    }
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: var(--bg); min-height: 100vh;
+      color: var(--text); position: relative;
+      overflow-x: hidden; padding-bottom: 100px;
+    }
+    .particles { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+    .particle { position: absolute; width: 3px; height: 3px; background: rgba(255,255,255,0.3); border-radius: 50%; animation: pFloat 8s infinite ease-in-out; }
+    @keyframes pFloat { 0%,100% { transform: translateY(0) translateX(0); opacity: 0; } 50% { opacity: 1; } }
+    .container { max-width: 480px; margin: 0 auto; padding: 16px; position: relative; z-index: 1; }
+    .app-header { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; margin-bottom: 8px; }
+    .back-btn { width: 40px; height: 40px; border-radius: 12px; background: var(--surface2); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text2); transition: all 0.3s; border: none; }
+    .back-btn:hover { color: white; background: var(--accent); }
+    .app-logo { font-size: 26px; font-weight: 800; background: linear-gradient(135deg, #a855f7, #6c5ce7, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .header-actions { display: flex; align-items: center; gap: 10px; }
+    .icon-btn { width: 40px; height: 40px; border-radius: 12px; background: var(--surface2); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text2); position: relative; transition: all 0.3s; border: none; }
+    .badge-dot { position: absolute; top: 6px; right: 6px; width: 7px; height: 7px; background: var(--red); border-radius: 50%; display: none; }
+    .avatar-btn { width: 40px; height: 40px; border-radius: 12px; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; cursor: pointer; overflow: hidden; font-size: 15px; border: none; }
+    .avatar-btn img { width: 100%; height: 100%; object-fit: cover; }
+    .balance-card { background: var(--surface); border-radius: var(--radius); padding: 24px 20px; margin-bottom: 14px; border: 1px solid var(--border); position: relative; overflow: hidden; }
+    .balance-card::before { content: ''; position: absolute; top: -40%; right: -20%; width: 180px; height: 180px; background: radial-gradient(circle, rgba(108,92,231,0.12), transparent 70%); border-radius: 50%; }
+    .user-id-row { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; background: var(--surface2); padding: 8px 14px; border-radius: 30px; width: fit-content; }
+    .user-id-row span { font-size: 12px; color: var(--text2); }
+    .user-id-row strong { letter-spacing: 1px; font-size: 15px; }
+    .copy-mini { width: 26px; height: 26px; border-radius: 8px; background: var(--accent); display: flex; align-items: center; justify-content: center; cursor: pointer; color: white; font-size: 11px; border: none; }
+    .balance-main { text-align: center; margin-bottom: 18px; }
+    .balance-main .label { font-size: 12px; color: var(--text2); margin-bottom: 4px; }
+    .balance-main .value { font-size: 50px; font-weight: 800; background: linear-gradient(135deg, #fff, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .balance-second { display: flex; justify-content: center; align-items: center; gap: 6px; padding-top: 14px; border-top: 1px solid var(--border); }
+    .balance-second .value2 { font-size: 22px; font-weight: 700; background: linear-gradient(135deg, #f59e0b, #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .rate-text { font-size: 10px; color: var(--text2); margin-top: 4px; text-align: center; }
+    .quick-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+    .q-btn { background: var(--surface); border-radius: 18px; padding: 16px 10px; text-align: center; cursor: pointer; border: 1px solid var(--border); transition: all 0.3s; }
+    .q-icon { width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-size: 18px; }
+    .q-icon.transfer { background: rgba(59,130,246,0.2); color: #3b82f6; }
+    .q-icon.withdraw { background: rgba(168,85,247,0.2); color: #a855f7; }
+    .q-icon.history { background: rgba(16,185,129,0.2); color: #10b981; }
+    .q-icon.charge { background: rgba(245,158,11,0.2); color: #f59e0b; }
+    .q-label { font-size: 12px; font-weight: 600; }
+    .news-bar { background: var(--surface); border-radius: 14px; padding: 10px 14px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; border: 1px solid var(--border); overflow: hidden; }
+    .news-dot { width: 7px; height: 7px; background: var(--accent2); border-radius: 50%; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+    .news-scroll { flex: 1; overflow: hidden; }
+    .news-scroll span { white-space: nowrap; animation: scroll 15s linear infinite; display: inline-block; font-size: 12px; }
+    @keyframes scroll { 0%{transform:translateX(100%);} 100%{transform:translateX(-100%);} }
+    .section-card { background: var(--surface); border-radius: var(--radius); padding: 18px; border: 1px solid var(--border); margin-bottom: 14px; }
+    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .tx-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); cursor: pointer; }
+    .tx-left { display: flex; align-items: center; gap: 10px; }
+    .tx-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+    .tx-icon.in { background: rgba(16,185,129,0.15); color: #10b981; }
+    .tx-icon.out { background: rgba(239,68,68,0.15); color: #ef4444; }
+    .tx-info h4 { font-size: 13px; }
+    .tx-info span { font-size: 10px; color: var(--text2); }
+    .tx-amount { font-weight: 700; }
+    .tx-amount.in { color: #10b981; }
+    .tx-amount.out { color: #ef4444; }
+    .tx-toggle { width: 30px; height: 30px; border-radius: 8px; background: var(--surface2); display: flex; align-items: center; justify-content: center; color: var(--text2); font-size: 12px; transition: all 0.3s; border: none; }
+    .tx-details { display: none; padding: 10px; background: var(--surface2); border-radius: 10px; margin-top: 8px; }
+    .tx-details.show { display: block; }
+    .tx-detail-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 12px; }
+    .tx-detail-row .dl { color: var(--text2); }
+    .tx-detail-row .dv { font-weight: 600; }
+    .tx-status-badge { padding: 3px 8px; border-radius: 12px; font-size: 10px; font-weight: 600; }
+    .tx-status-badge.pending { background: rgba(245,158,11,0.2); color: #f59e0b; }
+    .tx-status-badge.completed { background: rgba(16,185,129,0.2); color: #10b981; }
+    .tx-status-badge.rejected { background: rgba(239,68,68,0.2); color: #ef4444; }
+    .page { display: none; animation: fadeIn 0.3s ease; }
+    .page.active { display: block; }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
+    .card { background: var(--surface); border-radius: var(--radius); padding: 18px; margin-bottom: 14px; border: 1px solid var(--border); }
+    .btn { padding: 12px 20px; border-radius: 14px; border: none; font-family: 'Cairo', sans-serif; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.3s; display: inline-flex; align-items: center; justify-content: center; gap: 6px; color: white; }
+    .btn-primary { background: linear-gradient(135deg, #6c5ce7, #a855f7); }
+    .btn-success { background: linear-gradient(135deg, #10b981, #059669); }
+    .btn-danger { background: linear-gradient(135deg, #ef4444, #dc2626); }
+    .btn-outline { background: transparent; border: 2px solid var(--border); color: var(--text); }
+    .btn-warn { background: linear-gradient(135deg, #f59e0b, #d97706); }
+    .input-group { margin-bottom: 12px; }
+    .input-group label { display: block; margin-bottom: 5px; font-size: 12px; color: var(--text2); }
+    .input-group input, .input-group select { width: 100%; padding: 12px 14px; border: 2px solid var(--border); border-radius: 14px; font-family: 'Cairo', sans-serif; font-size: 14px; background: var(--surface2); color: var(--text); }
+    .input-group input:focus, .input-group select:focus { outline: none; border-color: var(--accent); }
+    .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 2000; align-items: center; justify-content: center; padding: 20px; }
+    .modal.active { display: flex; }
+    .modal-content { background: var(--surface); border-radius: 28px; padding: 22px; max-width: 420px; width: 100%; max-height: 85vh; overflow-y: auto; border: 1px solid var(--border); }
+    .toast-container { position: fixed; top: 20px; left: 20px; right: 20px; z-index: 3000; display: flex; flex-direction: column; gap: 6px; pointer-events: none; }
+    .toast { background: var(--surface); padding: 12px 16px; border-radius: 14px; display: flex; align-items: center; gap: 8px; pointer-events: auto; animation: slideIn 0.3s ease; border: 1px solid var(--border); font-size: 13px; }
+    @keyframes slideIn { from{transform:translateX(100%);opacity:0;} to{transform:translateX(0);opacity:1;} }
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); display: flex; justify-content: space-around; align-items: center; padding: 6px 10px; z-index: 1000; border-top: 1px solid var(--border); max-width: 480px; margin: 0 auto; }
+    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 1px; color: var(--text2); cursor: pointer; padding: 6px 14px; border-radius: 10px; font-size: 10px; }
+    .nav-item i { font-size: 18px; }
+    .nav-item.active { color: var(--accent2); }
+    .notif-panel { position: fixed; top: 75px; left: 16px; right: 16px; max-width: 448px; margin: 0 auto; background: var(--surface); border-radius: 22px; border: 1px solid var(--border); max-height: 320px; overflow-y: auto; z-index: 1500; display: none; }
+    .notif-panel.active { display: block; }
+    .notif-item { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-bottom: 1px solid var(--border); cursor: pointer; }
+    .notif-dot { width: 7px; height: 7px; background: var(--accent); border-radius: 50%; }
+    .notif-dot.read { background: transparent; }
+    .notif-text { flex: 1; font-size: 12px; }
+    .notif-time { font-size: 9px; color: var(--text2); }
+    .edit-row { display: flex; align-items: center; justify-content: space-between; padding: 12px; background: var(--surface2); border-radius: 12px; margin-bottom: 8px; }
+    .edit-row .info { flex: 1; }
+    .edit-row .info .lbl { font-size: 10px; color: var(--text2); }
+    .edit-row .info .val { font-weight: 600; font-size: 14px; }
+    .edit-btn { width: 34px; height: 34px; border-radius: 10px; background: var(--accent); display: flex; align-items: center; justify-content: center; cursor: pointer; color: white; font-size: 13px; border: none; }
+    .tabs { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+    .tab { padding: 7px 14px; background: var(--surface2); border-radius: 18px; cursor: pointer; font-size: 12px; border: none; color: var(--text); }
+    .tab.active { background: var(--accent); color: white; }
+    .terms-box { max-height: 150px; overflow-y: auto; padding: 12px; background: var(--surface2); border-radius: 14px; margin-bottom: 12px; font-size: 11px; line-height: 1.8; white-space: pre-line; color: var(--text2); }
+    @media (max-width: 500px) { .container { padding: 10px; } .balance-main .value { font-size: 42px; } }
+  </style>
+</head>
+<body>
+
+  <div class="particles" id="particles"></div>
+  <div class="toast-container" id="toastContainer"></div>
+
+  <div class="container">
+
+    <!-- AUTH PAGE -->
+    <div id="authPage" class="page active">
+      <div class="card" style="max-width: 400px; margin: 30px auto; text-align: center;">
+        <div style="font-size: 44px;">🏦</div>
+        <h2 style="font-size: 30px; background: linear-gradient(135deg,#a855f7,#3b82f6); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Vilue</h2>
+        <p style="color:var(--text2);margin-bottom:24px;">مصرفك الرقمي الذكي</p>
+        
+        <div id="loginForm">
+          <div class="input-group"><input type="email" id="loginEmail" placeholder="البريد الإلكتروني"></div>
+          <div class="input-group"><input type="password" id="loginPassword" placeholder="كلمة المرور"></div>
+          <button class="btn btn-primary" style="width:100%;" onclick="login()">تسجيل الدخول</button>
+          <p style="margin-top:12px;"><a href="#" onclick="showForgotPassword()" style="color:var(--accent2);">نسيت كلمة المرور؟</a></p>
+          <p style="margin-top:4px;"><a href="#" onclick="showSignup()" style="color:var(--accent2);">إنشاء حساب جديد</a></p>
+        </div>
+
+        <div id="signupForm" style="display:none;">
+          <div class="input-group"><input type="text" id="signupUsername" placeholder="Username (English only)"></div>
+          <div class="input-group"><input type="email" id="signupEmail" placeholder="Email"></div>
+          <div class="input-group"><input type="password" id="signupPassword" placeholder="Password"></div>
+          <div class="input-group"><input type="password" id="signupConfirmPassword" placeholder="Confirm Password"></div>
+          <div class="terms-box">مرحباً بك في Vilue!
+
+باستخدامك للتطبيق أنت توافق على:
+• محفظة رقمية لتخزين أموالك
+• تحويل وسحب الأموال
+• شحن الرصيد عبر تليجرام
+• 5000 سلون = 1000 دينار عراقي
+
+مسؤوليتك:
+• حافظ على سرية حسابك
+• لا تشارك حسابك مع أحد
+
+المحظورات:
+• الاحتيال أو خداع المستخدمين
+• المخالفات تؤدي إلى حظر الحساب
+
+الدعم: @QW_LE
+شكراً لثقتك بنا!</div>
+          <label style="color:var(--text2);font-size:12px;"><input type="checkbox" id="agreeTerms"> أوافق على الشروط</label>
+          <button class="btn btn-primary" style="width:100%;margin-top:8px;" onclick="signup()">إنشاء حساب</button>
+          <p style="margin-top:12px;"><a href="#" onclick="showLogin()" style="color:var(--accent2);">تسجيل الدخول</a></p>
+        </div>
+
+        <div id="forgotPasswordForm" style="display:none;">
+          <p style="color:var(--text2);margin-bottom:14px;">أدخل بريدك لاستعادة كلمة المرور</p>
+          <div class="input-group"><input type="email" id="forgotEmail" placeholder="البريد الإلكتروني"></div>
+          <button class="btn btn-primary" style="width:100%;" onclick="sendResetCode()">إرسال رمز التحقق</button>
+          <div id="resetCodeSection" style="display:none;margin-top:14px;">
+            <div class="input-group"><input type="text" id="resetCode" maxlength="6" placeholder="رمز التحقق"></div>
+            <div class="input-group"><input type="password" id="newResetPassword" placeholder="كلمة المرور الجديدة"></div>
+            <button class="btn btn-primary" style="width:100%;" onclick="resetPassword()">تغيير كلمة المرور</button>
+          </div>
+          <p style="margin-top:12px;"><a href="#" onclick="showLogin()" style="color:var(--accent2);">العودة</a></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div id="dashboardPage" class="page">
+      <div class="app-header">
+        <div class="app-logo">Vilue</div>
+        <div class="header-actions">
+          <button class="icon-btn" onclick="toggleNotifPanel()"><i class="far fa-bell"></i><span class="badge-dot" id="notifBadge"></span></button>
+          <button class="avatar-btn" onclick="switchPage('account')"><span id="headerInitial">V</span></button>
+        </div>
+      </div>
+      <div class="notif-panel" id="notifPanel"><div id="notifPanelList"></div></div>
+
+      <div class="balance-card">
+        <div class="user-id-row"><span>معرفك</span><strong id="displayUserId">00000</strong><button class="copy-mini" onclick="copyUserId()"><i class="far fa-copy"></i></button></div>
+        <div class="balance-main"><div class="label">💎 رصيد سلون</div><div class="value" id="salonBalance">0</div></div>
+        <div class="balance-second"><span>💰</span><span class="value2" id="dinarBalance">0</span><span style="color:var(--text2);">دينار عراقي</span></div>
+        <div class="rate-text">5000 سلون = 1000 دينار عراقي</div>
+      </div>
+
+      <div class="quick-actions">
+        <div class="q-btn" onclick="showTransferModal()"><div class="q-icon transfer"><i class="fas fa-paper-plane"></i></div><span class="q-label">تحويل</span></div>
+        <div class="q-btn" onclick="showWithdrawModal()"><div class="q-icon withdraw"><i class="fas fa-arrow-down"></i></div><span class="q-label">سحب</span></div>
+        <div class="q-btn" onclick="switchPage('transactions')"><div class="q-icon history"><i class="fas fa-clock"></i></div><span class="q-label">السجل</span></div>
+      </div>
+      <div class="quick-actions">
+        <div class="q-btn" onclick="openTelegramCharge()"><div class="q-icon charge"><i class="fas fa-bolt"></i></div><span class="q-label">شحن رصيد</span></div>
+        <div class="q-btn" onclick="switchPage('account')"><div class="q-icon transfer"><i class="fas fa-user-cog"></i></div><span class="q-label">الحساب</span></div>
+      </div>
+
+      <div class="news-bar"><div class="news-dot"></div><div class="news-scroll"><span id="newsText">مرحباً بك في Vilue!</span></div></div>
+
+      <div class="section-card">
+        <div class="section-header"><h4>آخر العمليات</h4><span style="color:var(--accent2);cursor:pointer;" onclick="switchPage('transactions')">عرض الكل →</span></div>
+        <div id="recentTransactionsList"></div>
+      </div>
+      <div id="adminAccessBtn" style="display:none;"><button class="btn btn-warn" style="width:100%;" onclick="switchPage('admin')"><i class="fas fa-crown"></i> لوحة الأدمن</button></div>
+    </div>
+
+    <!-- TRANSACTIONS -->
+    <div id="transactionsPage" class="page">
+      <div class="app-header"><button class="back-btn" onclick="switchPage('dashboard')"><i class="fas fa-arrow-right"></i></button><div class="app-logo">المعاملات</div><div class="header-actions"><button class="icon-btn" onclick="toggleNotifPanel()"><i class="far fa-bell"></i></button><button class="avatar-btn" onclick="switchPage('account')"><span>V</span></button></div></div>
+      <div class="section-card">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:14px;text-align:center;">
+          <div style="color:#10b981;" id="totalIn">0</div><div style="color:#ef4444;" id="totalOut">0</div><div id="totalNet">0</div>
+        </div>
+        <div id="transactionsList"></div>
+      </div>
+    </div>
+
+    <!-- ACCOUNT -->
+    <div id="accountPage" class="page">
+      <div class="app-header"><button class="back-btn" onclick="switchPage('dashboard')"><i class="fas fa-arrow-right"></i></button><div class="app-logo">الحساب</div><div class="header-actions"><button class="icon-btn" onclick="toggleNotifPanel()"><i class="far fa-bell"></i></button><button class="avatar-btn" onclick="switchPage('account')"><span>V</span></button></div></div>
+      
+      <div class="card" style="text-align:center;">
+        <div style="width:85px;height:85px;border-radius:50%;background:linear-gradient(135deg,#6c5ce7,#a855f7);display:flex;align-items:center;justify-content:center;color:white;font-size:32px;font-weight:700;margin:0 auto;cursor:pointer;overflow:hidden;position:relative;" onclick="document.getElementById('profileImageInput').click()">
+          <span id="profileInitial">V</span><img id="profileImg" style="display:none;width:100%;height:100%;object-fit:cover;position:absolute;">
+        </div>
+        <input type="file" id="profileImageInput" accept="image/*" onchange="handleProfileImageUpload(event)" style="display:none;">
+        <p style="margin-top:8px;font-size:11px;color:var(--text2);">اضغط لتغيير الصورة</p>
+      </div>
+
+      <div class="card">
+        <h4 style="margin-bottom:14px;">معلومات الحساب</h4>
+        <div class="edit-row"><div class="info"><span class="lbl">الاسم</span><br><span class="val" id="accName">-</span></div><button class="edit-btn" onclick="editUsername()"><i class="fas fa-pen"></i></button></div>
+        <div class="edit-row"><div class="info"><span class="lbl">البريد الإلكتروني</span><br><span class="val" id="accEmail">-</span></div><button class="edit-btn" style="background:#334155;cursor:default;"><i class="fas fa-lock" style="color:var(--text2);"></i></button></div>
+        <div class="edit-row"><div class="info"><span class="lbl">معرف التحويل</span><br><span class="val" id="accUserId">-</span></div><button class="edit-btn" onclick="copyUserId()"><i class="far fa-copy"></i></button></div>
+      </div>
+
+      <div class="card">
+        <h4 style="margin-bottom:14px;">الأمان</h4>
+        <div class="edit-row"><div class="info"><span class="lbl">كلمة المرور</span><br><span class="val">••••••••</span></div><button class="edit-btn" onclick="showChangePasswordModal()"><i class="fas fa-pen"></i></button></div>
+        <div class="edit-row"><div class="info"><span class="lbl">التحقق بخطوتين</span><br><span class="val" id="f2fStatus">غير مفعل</span></div><button class="edit-btn" onclick="toggleF2F()"><i class="fas fa-cog"></i></button></div>
+      </div>
+
+      <button class="btn btn-danger" style="width:100%;margin-top:8px;" onclick="confirmLogout()"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</button>
+    </div>
+
+    <!-- ADMIN -->
+    <div id="adminPage" class="page">
+      <div class="app-header"><button class="back-btn" onclick="switchPage('dashboard')"><i class="fas fa-arrow-right"></i></button><div class="app-logo">لوحة الأدمن</div><div class="header-actions"><button class="icon-btn" onclick="toggleNotifPanel()"><i class="far fa-bell"></i></button><button class="avatar-btn" onclick="switchPage('account')"><span>V</span></button></div></div>
+      <div class="tabs"><button class="tab active" onclick="showAdminTab('users')">المستخدمين</button><button class="tab" onclick="showAdminTab('withdrawals')">السحوبات</button><button class="tab" onclick="showAdminTab('settings')">الإعدادات</button></div>
+      <div id="adminUsersSection" class="card"><h4>المستخدمين</h4><input type="text" placeholder="بحث..." id="adminUserSearch" onkeyup="loadAdminUsers()"><div id="adminUsersList"></div></div>
+      <div id="adminWithdrawalsSection" class="card" style="display:none;"><h4>طلبات السحب</h4><div id="adminWithdrawalsList"></div></div>
+      <div id="adminSettingsSection" class="card" style="display:none;">
+        <h4>الإعدادات</h4>
+        <div class="input-group"><label>عمولة التحويل (سلون)</label><input type="number" id="transferCommission" value="0"></div>
+        <div class="input-group"><label>عمولة السحب (سلون)</label><input type="number" id="withdrawCommission" value="0"></div>
+        <div class="input-group"><label>رابط تليجرام للشحن</label><input type="text" id="telegramLink" value="@QW_LE"></div>
+        <div class="input-group"><label>نص شريط الأخبار</label><input type="text" id="newsTextInput"></div>
+        <button class="btn btn-primary" onclick="saveAdminSettings()">حفظ جميع الإعدادات</button>
+        <button class="btn btn-danger" style="margin-top:12px;width:100%;" onclick="resetAllBalances()">تصفير جميع الأرصدة</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bottom-nav" id="bottomNav">
+    <div class="nav-item active" onclick="switchPage('dashboard')"><i class="fas fa-home"></i><span>الرئيسية</span></div>
+    <div class="nav-item" onclick="switchPage('transactions')"><i class="fas fa-exchange-alt"></i><span>المعاملات</span></div>
+    <div class="nav-item" onclick="switchPage('account')"><i class="fas fa-user"></i><span>الحساب</span></div>
+  </div>
+
+  <!-- MODALS -->
+  <div id="transferModal" class="modal"><div class="modal-content"><h3>تحويل الأموال</h3><div class="input-group"><input type="text" id="transferUserId" maxlength="5" placeholder="معرف المستلم"><button class="btn btn-outline" style="margin-top:6px;width:100%;" onclick="searchUserById()">بحث</button></div><div id="transferUserInfo"></div><div class="input-group"><input type="number" id="transferAmount" min="100" placeholder="المبلغ (سلون)" onkeyup="calcTransfer()"></div><p style="font-size:13px;color:var(--text2);">💰 <span id="tDinar">0</span> دينار عراقي | عمولة: <span id="tComm">0</span> | الإجمالي: <span id="tTotal">0</span> سلون</p><button class="btn btn-primary" style="width:100%;" onclick="confirmTransfer()">تأكيد التحويل</button><button class="btn btn-outline" style="width:100%;margin-top:6px;" onclick="closeModal('transferModal')">إلغاء</button></div></div>
+
+  <div id="withdrawModal" class="modal"><div class="modal-content"><h3>سحب الأموال</h3><div class="input-group"><label>طريقة السحب</label><select id="withdrawMethod" onchange="toggleWFields()"><option value="mastercard">💳 ماستر كارد</option><option value="zaincash">📱 زين كاش</option></select></div><div id="mcFields"><div class="input-group"><label>اسم حامل البطاقة</label><input type="text" id="cardHolderName" placeholder="الاسم على البطاقة"></div><div class="input-group"><label>رقم البطاقة (9-12 أرقام)</label><input type="text" id="cardNumber" maxlength="12" placeholder="0000 0000 0000"></div></div><div id="zcFields" style="display:none;"><div class="input-group"><label>رقم زين كاش (11 رقم)</label><input type="text" id="zaincashNumber" maxlength="11" placeholder="07xxxxxxxxx"></div></div><div class="input-group"><label style="font-weight:700;color:#f59e0b;">المبلغ (سلون) - حد أدنى 5,000 سلون</label><input type="number" id="withdrawAmount" min="5000" placeholder="5000" onkeyup="calcWithdraw()"></div><p style="font-size:15px;text-align:center;">💰 <span id="wDinar" style="font-size:24px;font-weight:800;background:linear-gradient(135deg,#f59e0b,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">0</span> <span style="font-size:18px;font-weight:800;background:linear-gradient(135deg,#f59e0b,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">دينار عراقي</span></p><p style="font-size:12px;color:var(--text2);">عمولة: <span id="wComm">0</span> سلون | الإجمالي: <span id="wTotal">0</span> سلون</p><button class="btn btn-primary" style="width:100%;" onclick="confirmWithdraw()">تقديم طلب السحب</button><button class="btn btn-outline" style="width:100%;margin-top:6px;" onclick="closeModal('withdrawModal')">إلغاء</button></div></div>
+
+  <div id="otpModal" class="modal"><div class="modal-content"><h3>رمز التحقق</h3><p style="color:var(--text2);margin-bottom:12px;">تم إرسال رمز التحقق إلى بريدك الإلكتروني</p><div class="input-group"><input type="text" id="otpCode" maxlength="6" placeholder="000000"></div><button class="btn btn-primary" style="width:100%;" onclick="submitOtp()">تحقق</button><button class="btn btn-outline" style="width:100%;margin-top:6px;" onclick="closeModal('otpModal')">إلغاء</button></div></div>
+
+  <div id="changePasswordModal" class="modal"><div class="modal-content"><h3>تغيير كلمة المرور</h3><div class="input-group"><label>كلمة المرور الحالية</label><input type="password" id="currentPassword" placeholder="كلمة المرور الحالية"></div><div id="newPassSection" style="display:none;"><div class="input-group"><label>رمز التحقق من البريد</label><input type="text" id="changePassOtp" maxlength="6" placeholder="000000"></div><div class="input-group"><label>كلمة المرور الجديدة</label><input type="password" id="newPassword" placeholder="كلمة المرور الجديدة"></div><div class="input-group"><label>تأكيد كلمة المرور</label><input type="password" id="confirmNewPassword" placeholder="تأكيد كلمة المرور"></div></div><button class="btn btn-primary" style="width:100%;" id="changePassBtn" onclick="startChangePassword()">إرسال رمز التحقق</button><button class="btn btn-outline" style="width:100%;margin-top:6px;" onclick="closeModal('changePasswordModal')">إلغاء</button></div></div>
+
+  <div id="logoutConfirmModal" class="modal"><div class="modal-content"><h3>تأكيد الخروج</h3><p style="color:var(--text2);margin-bottom:16px;text-align:center;">هل أنت متأكد من تسجيل الخروج؟</p><div style="display:flex;gap:10px;"><button class="btn btn-danger" style="flex:1;" onclick="doLogout()">نعم، اخرج</button><button class="btn btn-outline" style="flex:1;" onclick="closeModal('logoutConfirmModal')">إلغاء</button></div></div></div>
+
+  <script>
+    // ==================== EMAILJS INIT ====================
+    (function(){ emailjs.init("ob3yvKcyktA93VQNG"); })();
+
+    // ==================== GLOBAL VARS ====================
+    let currentUser = null;
+    let users = [];
+    let commissions = { transfer: 0, withdraw: 0 };
+    let telegramUsername = '@QW_LE';
+    let newsTickerText = "مرحباً بك في Vilue!";
+    let otpCallback = null;
+    let otpCodeGlobal = null;
+
+    // ==================== HELPERS ====================
+    function genId() { return Date.now() + '-' + Math.random().toString(36).substr(2,9); }
+    function genUserId() { return Math.floor(10000+Math.random()*90000).toString(); }
+    function genCode() { return Math.floor(100000+Math.random()*900000).toString(); }
+    
+    function loadData() { 
+      users = JSON.parse(localStorage.getItem('vu')) || []; 
+    }
+    function saveData() { 
+      localStorage.setItem('vu', JSON.stringify(users)); 
+      loadData(); // إعادة تحميل البيانات فوراً بعد الحفظ
+    }
+    
+    function showToast(msg) {
+      const t = document.createElement('div'); t.className = 'toast';
+      t.innerHTML = `<span>${msg}</span>`;
+      document.getElementById('toastContainer').appendChild(t);
+      setTimeout(() => t.remove(), 3000);
+    }
+    
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+    // ==================== EMAIL SYSTEM (5 per 30 min) ====================
+    function getEmailLimits() {
+      const limits = JSON.parse(localStorage.getItem('emailLimits') || '{}');
+      const now = Date.now();
+      // تصفير الحدود إذا مرت 30 دقيقة
+      let changed = false;
+      Object.keys(limits).forEach(key => {
+        if (now - limits[key].timestamp > 1800000) { // 30 دقيقة
+          delete limits[key];
+          changed = true;
+        }
+      });
+      if (changed) localStorage.setItem('emailLimits', JSON.stringify(limits));
+      return limits;
+    }
+
+    function canSendEmail(email) {
+      const limits = getEmailLimits();
+      const key = email + '_count';
+      return (limits[key]?.count || 0) < 5;
+    }
+
+    function incrementEmailCount(email) {
+      const limits = getEmailLimits();
+      const key = email + '_count';
+      if (!limits[key]) {
+        limits[key] = { count: 1, timestamp: Date.now() };
+      } else {
+        limits[key].count++;
+        limits[key].timestamp = Date.now();
+      }
+      localStorage.setItem('emailLimits', JSON.stringify(limits));
+    }
+
+    function sendEmail(to, subject, message) {
+      if (!canSendEmail(to)) {
+        showToast('⏳ وصلت الحد الأقصى (5 رسائل كل 30 دقيقة). انتظر قليلاً.');
+        return Promise.reject('limit');
+      }
+      incrementEmailCount(to);
+      return emailjs.send("vilue", "template_bmth6t2", {
+        to_email: to,
+        from_name: "Vilue",
+        from_email: "mk3426886@gmail.com",
+        subject: subject,
+        message: message
+      });
+    }
+
+    // ==================== OTP SYSTEM ====================
+    function requestOtp(email, callback) {
+      otpCodeGlobal = genCode();
+      otpCallback = callback;
+      sendEmail(email, 'رمز التحقق - Vilue', 
+        `مرحباً،\n\nرمز التحقق الخاص بك في Vilue هو: ${otpCodeGlobal}\n\nهذا الرمز صالح لمدة 10 دقائق\n\nشكراً لاستخدامك Vilue\nبرعاية سكون و الكبير`
+      );
+      document.getElementById('otpCode').value = '';
+      document.getElementById('otpModal').classList.add('active');
+    }
+
+    function submitOtp() {
+      if (document.getElementById('otpCode').value === otpCodeGlobal) {
+        closeModal('otpModal');
+        if (otpCallback) { 
+          const cb = otpCallback;
+          otpCallback = null;
+          otpCodeGlobal = null;
+          cb();
+        }
+      } else {
+        showToast('رمز التحقق غير صحيح');
+      }
+    }
+
+    // ==================== AUTH ====================
+    function showSignup() { 
+      document.getElementById('loginForm').style.display='none'; 
+      document.getElementById('signupForm').style.display='block'; 
+      document.getElementById('forgotPasswordForm').style.display='none'; 
+    }
+    function showLogin() { 
+      document.getElementById('signupForm').style.display='none'; 
+      document.getElementById('loginForm').style.display='block'; 
+      document.getElementById('forgotPasswordForm').style.display='none'; 
+    }
+    function showForgotPassword() { 
+      document.getElementById('loginForm').style.display='none'; 
+      document.getElementById('signupForm').style.display='none'; 
+      document.getElementById('forgotPasswordForm').style.display='block'; 
+      document.getElementById('resetCodeSection').style.display='none'; 
+    }
+
+    function signup() {
+      const uname = document.getElementById('signupUsername').value.trim();
+      const email = document.getElementById('signupEmail').value.trim();
+      const pass = document.getElementById('signupPassword').value;
+      const confirm = document.getElementById('signupConfirmPassword').value;
+      
+      if (!uname||!email||!pass||!confirm) return showToast('املأ جميع الحقول');
+      if (!/^[a-zA-Z0-9_]+$/.test(uname)) return showToast('الاسم باللغة الإنجليزية فقط');
+      if (pass!==confirm) return showToast('كلمة المرور غير متطابقة');
+      if (!document.getElementById('agreeTerms').checked) return showToast('وافق على الشروط');
+      if (users.find(u=>u.email===email)) return showToast('البريد مستخدم');
+      if (pass.length<6) return showToast('كلمة المرور 6 أحرف على الأقل');
+
+      requestOtp(email, ()=>{
+        const newUser = {
+          id: genId(), username: uname, email: email, password: pass,
+          isAdmin: false, isSuperAdmin: false,
+          salonBalance: 0, dinarBalance: 0, profileImage: null,
+          userId: genUserId(), f2fEnabled: false, f2fSecret: null,
+          banned: false, suspended: false,
+          notifications: [], transactions: [], withdrawRequests: [],
+          activeSession: null, lastUsernameChange: null
+        };
+        users.push(newUser);
+        saveData();
+        showToast('تم إنشاء الحساب بنجاح! سجل الدخول');
+        showLogin();
+      });
+    }
+
+    function sendResetCode() {
+      const email = document.getElementById('forgotEmail').value.trim();
+      const user = users.find(u=>u.email===email);
+      if (!user) return showToast('البريد غير مسجل');
+      
+      requestOtp(email, ()=>{
+        document.getElementById('resetCodeSection').style.display='block';
+      });
+    }
+
+    function resetPassword() {
+      const pass = document.getElementById('newResetPassword').value;
+      if (pass.length<6) return showToast('6 أحرف على الأقل');
+      
+      const email = document.getElementById('forgotEmail').value.trim();
+      const user = users.find(u=>u.email===email);
+      if (user) {
+        user.password = pass;
+        saveData();
+        showToast('تم تغيير كلمة المرور بنجاح');
+        showLogin();
+      }
+    }
+
+    function login() {
+      const email = document.getElementById('loginEmail').value.trim();
+      const pass = document.getElementById('loginPassword').value;
+      
+      // إعادة تحميل البيانات قبل تسجيل الدخول
+      loadData();
+      
+      const user = users.find(u=>u.email===email&&u.password===pass);
+      if (!user) return showToast('بيانات غير صحيحة');
+      if (user.banned) return showToast('الحساب محظور');
+      if (user.suspended) return showToast('الحساب موقوف');
+      if (user.activeSession) return showToast('مسجل من جهاز آخر');
+      
+      user.activeSession = { token: genId(), timestamp: Date.now() };
+      currentUser = user;
+      localStorage.setItem('activeSession', JSON.stringify({userId:user.id, token:user.activeSession.token}));
+      saveData();
+      showApp();
+    }
+
+    function showApp() {
+      document.getElementById('authPage').classList.remove('active');
+      document.getElementById('bottomNav').style.display = 'flex';
+      switchPage('dashboard');
+    }
+
+    // ==================== LOGOUT ====================
+    function confirmLogout() {
+      document.getElementById('logoutConfirmModal').classList.add('active');
+    }
+
+    function doLogout() {
+      closeModal('logoutConfirmModal');
+      if (currentUser) { 
+        currentUser.activeSession = null; 
+        saveData(); 
+        localStorage.removeItem('activeSession'); 
+      }
+      currentUser = null;
+      document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+      document.getElementById('authPage').classList.add('active');
+      document.getElementById('bottomNav').style.display = 'none';
+      showToast('تم تسجيل الخروج');
+    }
+
+    // ==================== F2F ====================
+    function toggleF2F() {
+      if (currentUser.f2fEnabled) {
+        // تعطيل
+        if (confirm('هل تريد تعطيل التحقق بخطوتين؟')) {
+          currentUser.f2fEnabled = false;
+          currentUser.f2fSecret = null;
+          saveData();
+          updateUI();
+          showToast('تم تعطيل التحقق بخطوتين');
+        }
+      } else {
+        // تفعيل
+        const code = genCode();
+        sendEmail(currentUser.email, 'تفعيل التحقق - Vilue', 
+          `مرحباً،\n\nرمز تفعيل التحقق بخطوتين: ${code}\n\nشكراً لاستخدامك Vilue`
+        );
+        const inp = prompt('تم إرسال رمز التحقق إلى بريدك. أدخل الرمز:');
+        if (inp === code) {
+          const sec = prompt('اختر رمز سري (6 أرقام):');
+          if (sec && sec.length===6 && /^\d+$/.test(sec)) {
+            currentUser.f2fEnabled = true;
+            currentUser.f2fSecret = sec;
+            saveData();
+            updateUI();
+            showToast('تم تفعيل التحقق بخطوتين');
+          }
+        } else {
+          showToast('رمز غير صحيح');
+        }
+      }
+    }
+
+    function requireF2F(action) {
+      if (!currentUser.f2fEnabled) { action(); return; }
+      requestOtp(currentUser.email, action);
+    }
+
+    // ==================== TRANSFER ====================
+    function calcTransfer() {
+      const a = parseInt(document.getElementById('transferAmount').value)||0;
+      document.getElementById('tDinar').textContent = Math.floor(a/5).toLocaleString();
+      document.getElementById('tComm').textContent = commissions.transfer;
+      document.getElementById('tTotal').textContent = (a+commissions.transfer).toLocaleString();
+    }
+
+    function searchUserById() {
+      const uid = document.getElementById('transferUserId').value;
+      loadData(); // إعادة تحميل البيانات للبحث
+      const u = users.find(u=>u.userId===uid&&u.id!==currentUser.id);
+      if (u) {
+        document.getElementById('transferUserInfo').innerHTML = `<div style="background:var(--surface2);padding:10px;border-radius:10px;margin:6px 0;">✅ ${u.username} (${u.userId})</div>`;
+        document.getElementById('transferUserInfo').dataset.uid = u.id;
+      } else {
+        document.getElementById('transferUserInfo').innerHTML = '<div style="color:var(--red);padding:10px;">❌ لم يتم العثور على المستخدم</div>';
+        delete document.getElementById('transferUserInfo').dataset.uid;
+      }
+    }
+
+    function confirmTransfer() {
+      const tid = document.getElementById('transferUserInfo').dataset.uid;
+      const amt = parseInt(document.getElementById('transferAmount').value);
+      if (!tid||!amt||amt<100) return showToast('تأكد من البيانات');
+      const total = amt+commissions.transfer;
+      if (currentUser.salonBalance<total) return showToast('رصيد غير كاف');
+
+      requireF2F(()=>{
+        loadData(); // إعادة تحميل للحصول على أحدث البيانات
+        const sender = users.find(u=>u.id===currentUser.id);
+        const target = users.find(u=>u.id===tid);
+        
+        sender.salonBalance -= total;
+        sender.dinarBalance = Math.floor(sender.salonBalance/5);
+        target.salonBalance += amt;
+        target.dinarBalance = Math.floor(target.salonBalance/5);
+        
+        const tx = {
+          id: genId(), type: 'transfer', amount: amt, 
+          dinarAmount: Math.floor(amt/5), commission: commissions.transfer,
+          fromName: sender.username, toName: target.username,
+          date: new Date().toISOString(), status: 'completed'
+        };
+        
+        sender.transactions.push({...tx, direction:'out'});
+        target.transactions.push({...tx, direction:'in'});
+        target.notifications.push({
+          id:genId(), type:'transfer', read:false,
+          message:`💰 استلام ${amt.toLocaleString()} سلون من ${sender.username}`,
+          date:new Date().toISOString()
+        });
+        
+        currentUser = sender;
+        saveData();
+        showToast(`تم تحويل ${amt.toLocaleString()} سلون بنجاح`);
+        closeModal('transferModal');
+        updateUI();
+      });
+    }
+
+    // ==================== WITHDRAW ====================
+    function toggleWFields() {
+      const m = document.getElementById('withdrawMethod').value;
+      document.getElementById('mcFields').style.display = m==='mastercard'?'block':'none';
+      document.getElementById('zcFields').style.display = m==='zaincash'?'block':'none';
+    }
+
+    function calcWithdraw() {
+      const a = parseInt(document.getElementById('withdrawAmount').value)||0;
+      document.getElementById('wDinar').textContent = Math.floor(a/5).toLocaleString();
+      document.getElementById('wComm').textContent = commissions.withdraw;
+      document.getElementById('wTotal').textContent = (a+commissions.withdraw).toLocaleString();
+    }
+
+    function confirmWithdraw() {
+      const amt = parseInt(document.getElementById('withdrawAmount').value);
+      if (!amt||amt<5000) return showToast('أقل مبلغ للسحب 5,000 سلون');
+      const total = amt+commissions.withdraw;
+      if (currentUser.salonBalance<total) return showToast('رصيد غير كاف');
+
+      const m = document.getElementById('withdrawMethod').value;
+      if (m==='mastercard') {
+        if (!document.getElementById('cardHolderName').value||!document.getElementById('cardNumber').value) 
+          return showToast('أدخل بيانات البطاقة');
+        if (document.getElementById('cardNumber').value.length<9||document.getElementById('cardNumber').value.length>12) 
+          return showToast('رقم البطاقة يجب أن يكون 9-12 أرقام');
+      } else {
+        if (document.getElementById('zaincashNumber').value.length!==11) 
+          return showToast('رقم زين كاش يجب أن يكون 11 رقم');
+      }
+
+      requireF2F(()=>{
+        loadData();
+        const user = users.find(u=>u.id===currentUser.id);
+        user.salonBalance -= total;
+        user.dinarBalance = Math.floor(user.salonBalance/5);
+        
+        const wr = {
+          id: genId(), userId: user.id, userName: user.username,
+          amount: amt, dinarAmount: Math.floor(amt/5), commission: commissions.withdraw,
+          method: m,
+          cardNumber: m==='mastercard'?document.getElementById('cardNumber').value:'',
+          cardHolder: m==='mastercard'?document.getElementById('cardHolderName').value:'',
+          zaincashNumber: m==='zaincash'?document.getElementById('zaincashNumber').value:'',
+          date: new Date().toISOString(), status: 'pending'
+        };
+        
+        if (!user.withdrawRequests) user.withdrawRequests = [];
+        user.withdrawRequests.push(wr);
+        user.transactions.push({
+          id: genId(), type: 'withdraw', amount: amt,
+          dinarAmount: Math.floor(amt/5), commission: commissions.withdraw,
+          method: m, date: new Date().toISOString(), direction: 'out', status: 'pending'
+        });
+        
+        currentUser = user;
+        saveData();
+        showToast(`تم تقديم طلب سحب ${Math.floor(amt/5).toLocaleString()} دينار عراقي`);
+        closeModal('withdrawModal');
+        updateUI();
+      });
+    }
+
+    // ==================== CHARGE ====================
+    function openTelegramCharge() {
+      const link = telegramUsername.replace('@','');
+      window.open(`https://t.me/${link}`, '_blank');
+      showToast('جارٍ تحويلك إلى تليجرام للشحن');
+    }
+
+    // ==================== ACCOUNT ====================
+    function handleProfileImageUpload(e) {
+      const f = e.target.files[0];
+      if (f) { 
+        const r = new FileReader(); 
+        r.onload = ev => { 
+          currentUser.profileImage = ev.target.result; 
+          saveData(); 
+          updateUI(); 
+          showToast('تم تحديث الصورة');
+        }; 
+        r.readAsDataURL(f); 
+      }
+    }
+
+    function editUsername() {
+      requestOtp(currentUser.email, ()=>{
+        const n = prompt('الاسم الجديد (English only):');
+        if (!n) return;
+        if (!/^[a-zA-Z0-9_]+$/.test(n)) return showToast('الاسم باللغة الإنجليزية فقط');
+        const now = Date.now(), last = currentUser.lastUsernameChange||0;
+        if ((now-last)/3600000 < 24) {
+          const rem = Math.ceil(24-(now-last)/3600000);
+          return showToast(`يمكنك تغيير الاسم بعد ${rem} ساعة`);
+        }
+        loadData();
+        const user = users.find(u=>u.id===currentUser.id);
+        user.username = n;
+        user.lastUsernameChange = now;
+        currentUser = user;
+        saveData();
+        updateUI();
+        showToast('تم تحديث الاسم');
+      });
+    }
+
+    function startChangePassword() {
+      if (document.getElementById('currentPassword').value !== currentUser.password) 
+        return showToast('كلمة المرور الحالية غير صحيحة');
+      
+      requestOtp(currentUser.email, ()=>{
+        document.getElementById('newPassSection').style.display='block';
+        document.getElementById('changePassBtn').textContent = 'تغيير كلمة المرور';
+        document.getElementById('changePassBtn').onclick = changePassword;
+      });
+    }
+
+    function changePassword() {
+      const np = document.getElementById('newPassword').value;
+      const cp = document.getElementById('confirmNewPassword').value;
+      if (np.length<6) return showToast('كلمة المرور 6 أحرف على الأقل');
+      if (np!==cp) return showToast('كلمة المرور غير متطابقة');
+      
+      loadData();
+      const user = users.find(u=>u.id===currentUser.id);
+      user.password = np;
+      currentUser = user;
+      saveData();
+      showToast('تم تغيير كلمة المرور بنجاح');
+      closeModal('changePasswordModal');
+      document.getElementById('newPassSection').style.display='none';
+      document.getElementById('changePassBtn').textContent = 'إرسال رمز التحقق';
+      document.getElementById('changePassBtn').onclick = startChangePassword;
+    }
+
+    function showChangePasswordModal() {
+      document.getElementById('currentPassword').value = '';
+      document.getElementById('newPassword').value = '';
+      document.getElementById('confirmNewPassword').value = '';
+      document.getElementById('newPassSection').style.display='none';
+      document.getElementById('changePassBtn').textContent = 'إرسال رمز التحقق';
+      document.getElementById('changePassBtn').onclick = startChangePassword;
+      document.getElementById('changePasswordModal').classList.add('active');
+    }
+
+    function copyUserId() { 
+      navigator.clipboard?.writeText(currentUser.userId); 
+      showToast('تم نسخ معرف التحويل');
+    }
+
+    // ==================== NOTIFICATIONS ====================
+    function toggleNotifPanel() {
+      const p = document.getElementById('notifPanel');
+      p.classList.toggle('active');
+      if (p.classList.contains('active')) {
+        const notifs = currentUser?.notifications || [];
+        document.getElementById('notifPanelList').innerHTML = notifs.length ? notifs
+          .sort((a,b)=>new Date(b.date)-new Date(a.date))
+          .slice(0,15)
+          .map(n=>`
+            <div class="notif-item" onclick="n.read=true;saveData();loadData();toggleNotifPanel();updateUI();">
+              <div class="notif-dot ${n.read?'read':''}"></div>
+              <div class="notif-text">${n.message}</div>
+              <div class="notif-time">${new Date(n.date).toLocaleTimeString('ar')}</div>
+            </div>
+          `).join('') : '<p style="padding:20px;text-align:center;">لا توجد إشعارات</p>';
+      }
+    }
+
+    // ==================== PAGES & UI ====================
+    function switchPage(page) {
+      document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+      document.getElementById(page+'Page').classList.add('active');
+      document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+      const navs = document.querySelectorAll('.nav-item');
+      const idx = ['dashboard','transactions','account'].indexOf(page);
+      if (idx>=0) navs[idx].classList.add('active');
+      updateUI();
+      if (page==='transactions') loadTransactions();
+      else if (page==='admin') showAdminTab('users');
+    }
+
+    function toggleTxDetails(id) {
+      const el = document.getElementById('txDet_'+id);
+      if (el) el.classList.toggle('show');
+    }
+
+    function updateUI() {
+      if (!currentUser) return;
+      document.getElementById('displayUserId').textContent = currentUser.userId;
+      document.getElementById('salonBalance').textContent = (currentUser.salonBalance||0).toLocaleString();
+      document.getElementById('dinarBalance').textContent = (currentUser.dinarBalance||0).toLocaleString();
+      document.getElementById('headerInitial').textContent = currentUser.username.charAt(0).toUpperCase();
+      document.getElementById('profileInitial').textContent = currentUser.username.charAt(0).toUpperCase();
+      
+      if (currentUser.profileImage) {
+        document.getElementById('profileInitial').style.display = 'none';
+        document.getElementById('profileImg').style.display = 'block';
+        document.getElementById('profileImg').src = currentUser.profileImage;
+      } else {
+        document.getElementById('profileInitial').style.display = 'block';
+        document.getElementById('profileImg').style.display = 'none';
+      }
+      
+      document.getElementById('newsText').textContent = newsTickerText;
+      
+      const unread = currentUser.notifications?.filter(n=>!n.read).length || 0;
+      document.getElementById('notifBadge').style.display = unread > 0 ? 'block' : 'none';
+      
+      document.getElementById('adminAccessBtn').style.display = currentUser.isAdmin ? 'block' : 'none';
+      
+      document.getElementById('accName').textContent = currentUser.username;
+      document.getElementById('accEmail').textContent = currentUser.email;
+      document.getElementById('accUserId').textContent = currentUser.userId;
+      document.getElementById('f2fStatus').textContent = currentUser.f2fEnabled ? 'مفعل ✓' : 'غير مفعل';
+      document.getElementById('f2fStatus').style.color = currentUser.f2fEnabled ? '#10b981' : '#ef4444';
+
+      // Recent transactions
+      const recent = (currentUser.transactions||[]).slice(-3).reverse();
+      document.getElementById('recentTransactionsList').innerHTML = recent.length ? recent.map(t=>`
+        <div>
+          <div class="tx-row" onclick="toggleTxDetails('rec_${t.id}')">
+            <div class="tx-left">
+              <div class="tx-icon ${t.direction==='in'?'in':'out'}">
+                <i class="fas fa-${t.type==='transfer'?'exchange-alt':t.type==='withdraw'?'arrow-down':'user-cog'}"></i>
+              </div>
+              <div class="tx-info">
+                <h4>${t.type==='transfer'?(t.direction==='in'?'استلام':'تحويل'):t.type==='withdraw'?'سحب':'إدارة'}</h4>
+                <span>${new Date(t.date).toLocaleString('ar')}</span>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span class="tx-amount ${t.direction==='in'?'in':'out'}">${t.direction==='in'?'+':'-'}${t.amount.toLocaleString()}</span>
+              <div class="tx-toggle"><i class="fas fa-chevron-down"></i></div>
+            </div>
+          </div>
+          <div class="tx-details" id="txDet_rec_${t.id}">
+            <div class="tx-detail-row"><span class="dl">الحالة</span><span class="tx-status-badge ${t.status||'completed'}">${t.status==='pending'?'معلق':t.status==='rejected'?'مرفوض':'مكتمل'}</span></div>
+            <div class="tx-detail-row"><span class="dl">دينار عراقي</span><span class="dv">${(t.dinarAmount||Math.floor(t.amount/5)).toLocaleString()}</span></div>
+          </div>
+        </div>
+      `).join('') : '<p style="text-align:center;color:var(--text2);">لا توجد عمليات</p>';
+    }
+
+    function loadTransactions() {
+      const txns = currentUser.transactions || [];
+      const tin = txns.filter(t=>t.direction==='in').reduce((s,t)=>s+t.amount,0);
+      const tout = txns.filter(t=>t.direction==='out').reduce((s,t)=>s+t.amount,0);
+      document.getElementById('totalIn').textContent = tin.toLocaleString()+' ⬆';
+      document.getElementById('totalOut').textContent = tout.toLocaleString()+' ⬇';
+      document.getElementById('totalNet').textContent = (tin-tout).toLocaleString()+' =';
+      
+      document.getElementById('transactionsList').innerHTML = txns.sort((a,b)=>new Date(b.date)-new Date(a.date)).map(t=>`
+        <div>
+          <div class="tx-row" onclick="toggleTxDetails('tx_${t.id}')">
+            <div class="tx-left">
+              <div class="tx-icon ${t.direction==='in'?'in':'out'}">
+                <i class="fas fa-${t.type==='transfer'?'exchange-alt':t.type==='withdraw'?'arrow-down':'user-cog'}"></i>
+              </div>
+              <div class="tx-info">
+                <h4>${t.type==='transfer'?(t.direction==='in'?`من ${t.fromName}`:`إلى ${t.toName}`):t.type==='withdraw'?'طلب سحب':'إدارة'}</h4>
+                <span>${new Date(t.date).toLocaleString('ar')}</span>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span class="tx-amount ${t.direction==='in'?'in':'out'}">${t.direction==='in'?'+':'-'}${t.amount.toLocaleString()}</span>
+              <div class="tx-toggle"><i class="fas fa-chevron-down"></i></div>
+            </div>
+          </div>
+          <div class="tx-details" id="txDet_tx_${t.id}">
+            <div class="tx-detail-row"><span class="dl">الحالة</span><span class="tx-status-badge ${t.status||'completed'}">${t.status==='pending'?'⏳ معلق':t.status==='rejected'?'❌ مرفوض':'✅ مكتمل'}</span></div>
+            <div class="tx-detail-row"><span class="dl">دينار عراقي</span><span class="dv">${(t.dinarAmount||Math.floor(t.amount/5)).toLocaleString()}</span></div>
+            ${t.commission?`<div class="tx-detail-row"><span class="dl">العمولة</span><span class="dv">${t.commission} سلون</span></div>`:''}
+            ${t.method?`<div class="tx-detail-row"><span class="dl">الطريقة</span><span class="dv">${t.method==='mastercard'?'💳 ماستر كارد':'📱 زين كاش'}</span></div>`:''}
+            <div class="tx-detail-row"><span class="dl">التاريخ</span><span class="dv">${new Date(t.date).toLocaleDateString('ar')} ${new Date(t.date).toLocaleTimeString('ar')}</span></div>
+          </div>
+        </div>
+      `).join('') || '<p style="text-align:center;padding:20px;">لا توجد معاملات</p>';
+    }
+
+    function showTransferModal() { 
+      document.getElementById('transferAmount').value = '';
+      document.getElementById('transferUserInfo').innerHTML = '';
+      document.getElementById('transferUserId').value = '';
+      document.getElementById('tDinar').textContent = '0';
+      document.getElementById('tComm').textContent = '0';
+      document.getElementById('tTotal').textContent = '0';
+      document.getElementById('transferModal').classList.add('active'); 
+    }
+
+    function showWithdrawModal() { 
+      document.getElementById('withdrawAmount').value = '';
+      document.getElementById('wDinar').textContent = '0';
+      document.getElementById('wComm').textContent = '0';
+      document.getElementById('wTotal').textContent = '0';
+      document.getElementById('withdrawModal').classList.add('active'); 
+      toggleWFields(); 
+    }
+
+    // ==================== ADMIN ====================
+    function showAdminTab(tab) {
+      ['users','withdrawals','settings'].forEach(t => {
+        const el = document.getElementById('admin'+t.charAt(0).toUpperCase()+t.slice(1)+'Section');
+        if (el) el.style.display = t===tab ? 'block' : 'none';
+      });
+      document.querySelectorAll('#adminPage .tab').forEach((tb,i) => {
+        tb.classList.toggle('active', ['users','withdrawals','settings'][i]===tab);
+      });
+      if (tab==='users') loadAdminUsers();
+      else if (tab==='withdrawals') loadAdminWithdrawals();
+    }
+
+    function loadAdminUsers() {
+      loadData(); // تحميل أحدث البيانات
+      const s = document.getElementById('adminUserSearch')?.value.toLowerCase()||'';
+      const filtered = users.filter(u=>
+        u.username.toLowerCase().includes(s)||
+        u.email.toLowerCase().includes(s)||
+        u.userId.includes(s)
+      );
+      
+      document.getElementById('adminUsersList').innerHTML = filtered.length ? filtered.map(u=>`
+        <div style="padding:10px;background:var(--surface2);border-radius:12px;margin-bottom:6px;">
+          <strong>${u.username}</strong> ${u.isAdmin?'👑':''}<br>
+          <small>${u.email} | ${u.userId}</small><br>
+          <small>سلون: ${(u.salonBalance||0).toLocaleString()} | دينار: ${(u.dinarBalance||0).toLocaleString()}</small><br>
+          <small>${u.banned?'🚫 محظور':u.suspended?'⏸️ موقوف':'✅ نشط'}</small><br>
+          <div style="margin-top:6px;display:flex;gap:4px;flex-wrap:wrap;">
+            <input type="number" id="bal_${u.id}" placeholder="مبلغ" style="width:60px;padding:5px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);">
+            <select id="typ_${u.id}" style="padding:5px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);"><option value="salon">سلون</option><option value="dinar">دينار</option></select>
+            <button class="btn btn-success" style="padding:4px 8px;font-size:10px;" onclick="adjustBalance('${u.id}','add')">+</button>
+            <button class="btn btn-danger" style="padding:4px 8px;font-size:10px;" onclick="adjustBalance('${u.id}','deduct')">-</button>
+            ${!u.isSuperAdmin ? `
+              <button class="btn btn-warn" style="padding:4px 8px;font-size:10px;" onclick="toggleBan('${u.id}')">${u.banned?'رفع':'حظر'}</button>
+              <button class="btn btn-outline" style="padding:4px 8px;font-size:10px;" onclick="toggleSuspend('${u.id}')">${u.suspended?'إلغاء':'توقيف'}</button>
+            ` : ''}
+          </div>
+        </div>
+      `).join('') : '<p>لا يوجد مستخدمين</p>';
+    }
+
+    function adjustBalance(uid, action) {
+      const amt = parseInt(document.getElementById('bal_'+uid).value);
+      const typ = document.getElementById('typ_'+uid).value;
+      if (!amt||amt<=0) return showToast('أدخل مبلغاً صحيحاً');
+      
+      loadData();
+      const u = users.find(u=>u.id===uid);
+      if (u) {
+        if (action==='add') u[typ+'Balance'] = (u[typ+'Balance']||0) + amt;
+        else u[typ+'Balance'] = Math.max(0, (u[typ+'Balance']||0) - amt);
+        
+        if (typ==='salon') u.dinarBalance = Math.floor(u.salonBalance/5);
+        else u.salonBalance = (u.dinarBalance||0)*5;
+        
+        u.transactions.push({
+          id:genId(), type:'admin_adjustment', amount:amt,
+          dinarAmount:Math.floor(amt/5), balanceType:typ,
+          direction:action==='add'?'in':'out',
+          date:new Date().toISOString(), admin:currentUser.username, status:'completed'
+        });
+        
+        saveData();
+        loadAdminUsers();
+        showToast(`تم ${action==='add'?'إضافة':'خصم'} ${amt} ${typ==='salon'?'سلون':'دينار'}`);
+      }
+    }
+
+    function toggleBan(uid) { 
+      loadData();
+      const u = users.find(u=>u.id===uid); 
+      if (u&&!u.isSuperAdmin) { 
+        u.banned = !u.banned; 
+        if (u.banned) u.activeSession = null; 
+        saveData(); 
+        loadAdminUsers(); 
+      } 
+    }
+
+    function toggleSuspend(uid) { 
+      loadData();
+      const u = users.find(u=>u.id===uid); 
+      if (u&&!u.isSuperAdmin) { 
+        u.suspended = !u.suspended; 
+        if (u.suspended) u.activeSession = null; 
+        saveData(); 
+        loadAdminUsers(); 
+      } 
+    }
+
+    function loadAdminWithdrawals() {
+      loadData();
+      const all = users.flatMap(u=>(u.withdrawRequests||[]).map(w=>({...w, userEmail:u.email})));
+      
+      document.getElementById('adminWithdrawalsList').innerHTML = all.length ? all
+        .sort((a,b)=>new Date(b.date)-new Date(a.date))
+        .map(w=>`
+          <div style="padding:10px;background:var(--surface2);border-radius:12px;margin-bottom:6px;">
+            <strong>${w.userName}</strong> (${w.userEmail})<br>
+            <small>${w.amount.toLocaleString()} سلون = ${w.dinarAmount.toLocaleString()} دينار عراقي</small><br>
+            <small>${w.method==='mastercard'?'💳 '+w.cardNumber+' | '+w.cardHolder:'📱 '+w.zaincashNumber}</small><br>
+            <span style="color:${w.status==='pending'?'#f59e0b':w.status==='rejected'?'#ef4444':'#10b981'};">
+              ${w.status==='pending'?'⏳ معلق':w.status==='rejected'?'❌ مرفوض':'✅ مكتمل'}
+            </span>
+            ${w.status==='pending'?`
+              <div style="margin-top:6px;display:flex;gap:4px;">
+                <button class="btn btn-success" style="padding:4px 10px;font-size:10px;" onclick="approveWithdraw('${w.userId}','${w.id}')">تأكيد</button>
+                <button class="btn btn-danger" style="padding:4px 10px;font-size:10px;" onclick="rejectWithdraw('${w.userId}','${w.id}')">رفض</button>
+              </div>
+            `:''}
+          </div>
+        `).join('') : '<p>لا توجد طلبات سحب</p>';
+    }
+
+    function approveWithdraw(uid, wid) {
+      loadData();
+      const u = users.find(u=>u.id===uid);
+      if (!u) return;
+      const w = u.withdrawRequests.find(w=>w.id===wid);
+      if (w) {
+        w.status = 'completed';
+        const tx = u.transactions.find(t=>t.type==='withdraw'&&t.amount===w.amount&&t.status==='pending');
+        if (tx) tx.status = 'completed';
+        u.notifications.push({
+          id:genId(), type:'withdraw', read:false,
+          message:`✅ تم تأكيد السحب ${w.dinarAmount} دينار عراقي`,
+          date:new Date().toISOString()
+        });
+        saveData();
+        loadAdminWithdrawals();
+        showToast('تم تأكيد السحب');
+      }
+    }
+
+    function rejectWithdraw(uid, wid) {
+      loadData();
+      const u = users.find(u=>u.id===uid);
+      if (!u) return;
+      const w = u.withdrawRequests.find(w=>w.id===wid);
+      if (w) {
+        w.status = 'rejected';
+        u.salonBalance += (w.amount + w.commission);
+        u.dinarBalance = Math.floor(u.salonBalance/5);
+        const tx = u.transactions.find(t=>t.type==='withdraw'&&t.amount===w.amount&&t.status==='pending');
+        if (tx) tx.status = 'rejected';
+        u.notifications.push({
+          id:genId(), type:'withdraw', read:false,
+          message:`❌ تم رفض السحب - المرتجع: ${w.dinarAmount} دينار عراقي`,
+          date:new Date().toISOString()
+        });
+        saveData();
+        loadAdminWithdrawals();
+        showToast('تم رفض السحب وإرجاع المبلغ');
+      }
+    }
+
+    function saveAdminSettings() {
+      commissions.transfer = parseInt(document.getElementById('transferCommission').value)||0;
+      commissions.withdraw = parseInt(document.getElementById('withdrawCommission').value)||0;
+      telegramUsername = document.getElementById('telegramLink').value.trim()||'@QW_LE';
+      newsTickerText = document.getElementById('newsTextInput').value.trim()||'مرحباً بك في Vilue!';
+      
+      localStorage.setItem('commissions', JSON.stringify(commissions));
+      localStorage.setItem('telegramUsername', telegramUsername);
+      localStorage.setItem('newsTicker', newsTickerText);
+      
+      document.getElementById('newsText').textContent = newsTickerText;
+      showToast('تم حفظ جميع الإعدادات');
+    }
+
+    function resetAllBalances() {
+      if (confirm('تصفير جميع الأرصدة؟ لا يمكن التراجع!')) {
+        loadData();
+        users.forEach(u=>{
+          if (!u.isSuperAdmin) {
+            u.salonBalance = 0;
+            u.dinarBalance = 0;
+          }
+        });
+        saveData();
+        showToast('تم تصفير جميع الأرصدة');
+      }
+    }
+
+    // ==================== INIT ====================
+    function createParticles() {
+      const p = document.getElementById('particles');
+      for (let i=0;i<30;i++) {
+        const d = document.createElement('div'); d.className='particle';
+        d.style.left = Math.random()*100+'%';
+        d.style.top = Math.random()*100+'%';
+        d.style.animationDelay = Math.random()*8+'s';
+        d.style.animationDuration = (6+Math.random()*8)+'s';
+        p.appendChild(d);
+      }
+    }
+
+    function createDefaultAdmin() {
+      if (!users.find(u=>u.email==='adminadmin33@@')) {
+        users.push({
+          id: genId(), username: 'Admin', email: 'adminadmin33@@', password: 'adminadmin',
+          isAdmin: true, isSuperAdmin: true, salonBalance: 0, dinarBalance: 0,
+          profileImage: null, userId: genUserId(), f2fEnabled: false, f2fSecret: null,
+          banned: false, suspended: false, notifications: [], transactions: [],
+          withdrawRequests: [], activeSession: null, lastUsernameChange: null
+        });
+        saveData();
+      }
+    }
+
+    function init() {
+      createParticles();
+      loadData();
+      createDefaultAdmin();
+      
+      commissions = JSON.parse(localStorage.getItem('commissions')) || { transfer: 0, withdraw: 0 };
+      telegramUsername = localStorage.getItem('telegramUsername') || '@QW_LE';
+      newsTickerText = localStorage.getItem('newsTicker') || 'مرحباً بك في Vilue!';
+      
+      document.getElementById('newsTextInput').value = newsTickerText;
+      document.getElementById('telegramLink').value = telegramUsername;
+      document.getElementById('transferCommission').value = commissions.transfer;
+      document.getElementById('withdrawCommission').value = commissions.withdraw;
+      
+      const session = localStorage.getItem('activeSession');
+      if (session) {
+        const s = JSON.parse(session);
+        const u = users.find(u=>u.id===s.userId);
+        if (u&&u.activeSession?.token===s.token) { 
+          currentUser = u; 
+          showApp(); 
+        }
+      }
+      
+      document.getElementById('bottomNav').style.display = currentUser ? 'flex' : 'none';
+    }
+
+    init();
+  </script>
+</body>
+  </html>
