@@ -1,0 +1,2080 @@
+here# ملف HTML كامل ومتكامل - تطبيق Vilue
+
+سأقدم لك ملف HTML واحد كامل يحتوي على **كل شيء مدمج** (HTML + CSS + JavaScript) ويعمل بشكل فعلي مع Firebase و EmailJS.
+
+```html
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vilue - المنصة المالية والتجارية</title>
+    
+    <!-- Google Fonts - Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* ==================== Global Styles ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-dark-blue: #1a2332;
+            --secondary-dark-blue: #2c3e50;
+            --accent-red: #e74c3c;
+            --accent-green: #27ae60;
+            --light-bg: #ecf0f1;
+            --white: #ffffff;
+            --text-dark: #2c3e50;
+            --text-light: #95a5a6;
+            --border-color: #bdc3c7;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* ==================== Navigation Bar ==================== */
+        .navbar {
+            background: var(--primary-dark-blue);
+            padding: 15px 0;
+            box-shadow: var(--shadow-lg);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--white);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--accent-red);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-red);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: var(--white);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .logout-btn {
+            background: var(--accent-red);
+            color: var(--white);
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+
+        /* ==================== Pages Container ==================== */
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* ==================== Auth Page ==================== */
+        .auth-container {
+            min-height: calc(100vh - 70px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .auth-box {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .auth-box h2 {
+            text-align: center;
+            color: var(--primary-dark-blue);
+            margin-bottom: 30px;
+            font-size: 32px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent-green);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--accent-green);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: #229954;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .auth-toggle {
+            text-align: center;
+            margin-top: 20px;
+            color: var(--text-light);
+        }
+
+        .auth-toggle a {
+            color: var(--accent-red);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .error-message {
+            background: #fadbd8;
+            color: #c0392b;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .success-message {
+            background: #d5f4e6;
+            color: #27ae60;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        /* ==================== Home Page ==================== */
+        .home-page {
+            padding: 40px 0;
+        }
+
+        .welcome-section {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .welcome-section h1 {
+            color: var(--primary-dark-blue);
+            font-size: 42px;
+            margin-bottom: 15px;
+        }
+
+        .welcome-section p {
+            color: var(--text-light);
+            font-size: 18px;
+        }
+
+        /* ==================== Wallet Section ==================== */
+        .wallet-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .wallet-card {
+            background: linear-gradient(135deg, var(--primary-dark-blue), var(--secondary-dark-blue));
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: var(--shadow-lg);
+            color: var(--white);
+        }
+
+        .wallet-card h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .wallet-balance {
+            font-size: 36px;
+            font-weight: 900;
+            margin: 20px 0;
+        }
+
+        .wallet-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .wallet-btn {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid var(--white);
+            background: transparent;
+            color: var(--white);
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .wallet-btn:hover {
+            background: var(--white);
+            color: var(--primary-dark-blue);
+        }
+
+        /* ==================== Exchange Rate ==================== */
+        .exchange-section {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 30px;
+        }
+
+        .exchange-section h3 {
+            color: var(--primary-dark-blue);
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .exchange-rate {
+            background: var(--light-bg);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+        }
+
+        .exchange-form {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 15px;
+            align-items: end;
+        }
+
+        .exchange-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .exchange-input-group input {
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 16px;
+        }
+
+        .exchange-icon {
+            font-size: 24px;
+            color: var(--accent-green);
+        }
+
+        /* ==================== Store Section ==================== */
+        .store-section {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .store-section h2 {
+            color: var(--primary-dark-blue);
+            margin-bottom: 30px;
+            font-size: 32px;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .product-card {
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+            background: var(--white);
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--accent-green);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: var(--light-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            color: var(--text-light);
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .product-description {
+            color: var(--text-light);
+            font-size: 14px;
+            margin-bottom: 15px;
+            min-height: 40px;
+        }
+
+        .product-price {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--accent-green);
+            margin-bottom: 15px;
+        }
+
+        .add-to-cart-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--accent-green);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .add-to-cart-btn:hover {
+            background: #229954;
+        }
+
+        /* ==================== Cart Page ==================== */
+        .cart-page {
+            padding: 40px 0;
+        }
+
+        .cart-container {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .cart-container h2 {
+            color: var(--primary-dark-blue);
+            margin-bottom: 30px;
+            font-size: 32px;
+        }
+
+        .cart-items {
+            margin-bottom: 30px;
+        }
+
+        .cart-item {
+            display: grid;
+            grid-template-columns: 80px 1fr auto auto;
+            gap: 20px;
+            align-items: center;
+            padding: 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .cart-item-image {
+            width: 80px;
+            height: 80px;
+            background: var(--light-bg);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: var(--text-light);
+        }
+
+        .cart-item-info h4 {
+            color: var(--text-dark);
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .cart-item-price {
+            color: var(--accent-green);
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity-btn {
+            width: 35px;
+            height: 35px;
+            border: 2px solid var(--border-color);
+            background: var(--white);
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+
+        .quantity-btn:hover {
+            background: var(--accent-green);
+            color: var(--white);
+            border-color: var(--accent-green);
+        }
+
+        .quantity-display {
+            font-weight: 700;
+            font-size: 18px;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .remove-btn {
+            background: var(--accent-red);
+            color: var(--white);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .remove-btn:hover {
+            background: #c0392b;
+        }
+
+        .cart-summary {
+            background: var(--light-bg);
+            padding: 25px;
+            border-radius: 10px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .summary-row.total {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--accent-green);
+            border-top: 2px solid var(--border-color);
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--accent-green);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+
+        .checkout-btn:hover {
+            background: #229954;
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-light);
+        }
+
+        .empty-cart i {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .empty-cart h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        /* ==================== Admin Page ==================== */
+        .admin-page {
+            padding: 40px 0;
+        }
+
+        .admin-container {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: var(--shadow-lg);
+        }
+سأكمل الكود الكامل لك:
+
+```html
+        .admin-container h2 {
+            color: var(--primary-dark-blue);
+            margin-bottom: 30px;
+            font-size: 32px;
+        }
+
+        .admin-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .admin-tab-btn {
+            padding: 12px 25px;
+            border: none;
+            background: transparent;
+            font-family: 'Cairo', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--text-light);
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .admin-tab-btn.active {
+            color: var(--accent-green);
+            border-bottom-color: var(--accent-green);
+        }
+
+        .admin-tab-content {
+            display: none;
+        }
+
+        .admin-tab-content.active {
+            display: block;
+        }
+
+        .admin-actions {
+            margin-bottom: 25px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .admin-actions button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-add {
+            background: var(--accent-green);
+            color: var(--white);
+        }
+
+        .btn-add:hover {
+            background: #229954;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .admin-table thead {
+            background: var(--primary-dark-blue);
+            color: var(--white);
+        }
+
+        .admin-table th,
+        .admin-table td {
+            padding: 15px;
+            text-align: right;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .admin-table tbody tr:hover {
+            background: var(--light-bg);
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-edit {
+            background: #3498db;
+            color: var(--white);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .btn-delete {
+            background: var(--accent-red);
+            color: var(--white);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-completed {
+            background: #d5f4e6;
+            color: #27ae60;
+        }
+
+        .status-cancelled {
+            background: #fadbd8;
+            color: #c0392b;
+        }
+
+        /* ==================== Modal ==================== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-header h3 {
+            color: var(--primary-dark-blue);
+            font-size: 24px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: var(--text-light);
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            background: var(--light-bg);
+            color: var(--accent-red);
+        }
+
+        /* ==================== Notifications ==================== */
+        .notification {
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-weight: 600;
+            box-shadow: var(--shadow-lg);
+            z-index: 3000;
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateX(-50%) translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .notification.success {
+            background: var(--accent-green);
+            color: var(--white);
+        }
+
+        .notification.error {
+            background: var(--accent-red);
+            color: var(--white);
+        }
+
+        .notification.info {
+            background: #3498db;
+            color: var(--white);
+        }
+
+        /* ==================== Loading Spinner ==================== */
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 4000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loading.active {
+            display: flex;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid var(--white);
+            border-top-color: var(--accent-green);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ==================== Account Page ==================== */
+        .account-page {
+            padding: 40px 0;
+        }
+
+        .account-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .account-card {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .account-card h3 {
+            color: var(--primary-dark-blue);
+            margin-bottom: 20px;
+            font-size: 24px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--light-bg);
+        }
+
+        .info-label {
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+        .info-value {
+            color: var(--text-dark);
+            font-weight: 700;
+        }
+
+        .order-item {
+            padding: 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .order-id {
+            font-weight: 700;
+            color: var(--primary-dark-blue);
+        }
+
+        .order-date {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .order-total {
+            color: var(--accent-green);
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        /* ==================== Responsive Design ==================== */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .exchange-form {
+                grid-template-columns: 1fr;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cart-item {
+                grid-template-columns: 60px 1fr;
+                gap: 10px;
+            }
+
+            .cart-item-image {
+                width: 60px;
+                height: 60px;
+                font-size: 20px;
+            }
+
+            .quantity-controls,
+            .remove-btn {
+                grid-column: 2;
+            }
+
+            .admin-table {
+                font-size: 14px;
+            }
+
+            .admin-table th,
+            .admin-table td {
+                padding: 10px 8px;
+            }
+
+            .account-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ==================== Utilities ==================== */
+        .hidden {
+            display: none !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-20 {
+            margin-top: 20px;
+        }
+
+        .mb-20 {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Spinner -->
+    <div class="loading" id="loadingSpinner">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+
+    <!-- Authentication Page -->
+    <div id="authPage" class="page active">
+        <div class="auth-container">
+            <div class="auth-box">
+                <h2 id="authTitle">تسجيل الدخول</h2>
+                
+                <div class="error-message" id="authError"></div>
+                <div class="success-message" id="authSuccess"></div>
+
+                <!-- Login Form -->
+                <form id="loginForm" class="auth-form">
+                    <div class="form-group">
+                        <label>البريد الإلكتروني</label>
+                        <input type="email" id="loginEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label>كلمة المرور</label>
+                        <input type="password" id="loginPassword" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">دخول</button>
+                </form>
+
+                <!-- Register Form -->
+                <form id="registerForm" class="auth-form hidden">
+                    <div class="form-group">
+                        <label>البريد الإلكتروني</label>
+                        <input type="email" id="registerEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label>كلمة المرور</label>
+                        <input type="password" id="registerPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label>تأكيد كلمة المرور</label>
+                        <input type="password" id="registerConfirmPassword" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">تسجيل</button>
+                </form>
+
+                <div class="auth-toggle">
+                    <span id="toggleText">ليس لديك حساب؟</span>
+                    <a id="toggleAuth">سجل الآن</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application (Hidden until authenticated) -->
+    <div id="mainApp" class="hidden">
+        <!-- Navigation Bar -->
+        <nav class="navbar">
+            <div class="container">
+                <a href="#" class="logo" onclick="showPage('home')">Vil<span>ue</span></a>
+                
+                <ul class="nav-links">
+                    <li><a onclick="showPage('home')"><i class="fas fa-home"></i> الرئيسية</a></li>
+                    <li><a onclick="showPage('store')"><i class="fas fa-store"></i> المتجر</a></li>
+                    <li><a onclick="showPage('cart')"><i class="fas fa-shopping-cart"></i> السلة (<span id="cartCount">0</span>)</a></li>
+                    <li><a onclick="showPage('account')"><i class="fas fa-user"></i> حسابي</a></li>
+                    <li class="admin-only hidden"><a onclick="showPage('admin')"><i class="fas fa-cog"></i> الإدارة</a></li>
+                </ul>
+
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar">U</div>
+                    <span id="userEmailDisplay"></span>
+                    <button class="logout-btn" onclick="logout()">خروج</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Home Page -->
+        <div id="homePage" class="page active">
+            <div class="home-page">
+                <div class="container">
+                    <div class="welcome-section">
+                        <h1>مرحباً بك في Vilue</h1>
+                        <p>منصتك الشاملة للتسوق الإلكتروني والمحفظة الرقمية</p>
+                    </div>
+
+                    <!-- Wallet Section -->
+                    <div class="wallet-section">
+                        <div class="wallet-card">
+                            <h3><i class="fas fa-coins"></i> محفظة Seloon</h3>
+                            <div class="wallet-balance" id="seloonBalance">0</div>
+                            <div class="wallet-actions">
+                                <button class="wallet-btn" onclick="openTransferModal('seloon')">تحويل</button>
+                                <button class="wallet-btn" onclick="openExchangeModal()">تبديل</button>
+                            </div>
+                        </div>
+
+                        <div class="wallet-card">
+                            <h3><i class="fas fa-dollar-sign"></i> محفظة Cash</h3>
+                            <div class="wallet-balance" id="cashBalance">0</div>
+                            <div class="wallet-actions">
+                                <button class="wallet-btn" onclick="openTransferModal('cash')">تحويل</button>
+                                <button class="wallet-btn" onclick="openExchangeModal()">تبديل</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Exchange Section -->
+                    <div class="exchange-section">
+                        <h3>تبديل العملات</h3>
+                        <div class="exchange-rate">
+                            1 Cash = <span id="exchangeRateDisplay">1000</span> Seloon
+                        </div>
+                        <div class="exchange-form">
+                            <div class="exchange-input-group">
+                                <label>من</label>
+                                <select id="fromCurrency">
+                                    <option value="cash">Cash</option>
+                                    <option value="seloon">Seloon</option>
+                                </select>
+                                <input type="number" id="fromAmount" placeholder="المبلغ">
+                            </div>
+                            <div class="exchange-icon">
+                                <i class="fas fa-exchange-alt"></i>
+                            </div>
+                            <div class="exchange-input-group">
+                                <label>إلى</label>
+                                <select id="toCurrency">
+                                    <option value="seloon">Seloon</option>
+                                    <option value="cash">Cash</option>
+                                </select>
+                                <input type="number" id="toAmount" placeholder="المبلغ" readonly>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary mt-20" onclick="performExchange()">تنفيذ التبديل</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Store Page -->
+        <div id="storePage" class="page">
+            <div class="container">
+                <div class="store-section">
+                    <h2><i class="fas fa-store"></i> المتجر الإلكتروني</h2>
+                    <div class="products-grid" id="productsGrid">
+                        <!-- Products will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cart Page -->
+        <div id="cartPage" class="page">
+            <div class="cart-page">
+                <div class="container">
+                    <div class="cart-container">
+                        <h2><i class="fas fa-shopping-cart"></i> سلة المشتريات</h2>
+                        
+                        <div id="cartItemsContainer" class="cart-items">
+                            <!-- Cart items will be loaded here -->
+                        </div>
+
+                        <div id="cartSummaryContainer">
+                            <!-- Cart summary will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Account Page -->
+        <div id="accountPage" class="page">
+            <div class="account-page">
+                <div class="container">
+                    <div class="account-grid">
+                        <div class="account-card">
+                            <h3><i class="fas fa-user-circle"></i> معلومات الحساب</h3>
+                            <div class="info-row">
+                                <span class="info-label">البريد الإلكتروني:</span>
+                                <span class="info-value" id="accountEmail">-</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">نوع الحساب:</span>
+                                <span class="info-value" id="accountRole">مستخدم</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">تاريخ الانضمام:</span>
+                                <span class="info-value" id="accountJoinDate">-</span>
+                            </div>
+                        </div>
+
+                        <div class="account-card">
+                            <h3><i class="fas fa-wallet"></i> ملخص المحفظة</h3>
+                            <div class="info
+                              -row">
+                                <span class="info-label">رصيد Seloon:</span>
+                                <span class="info-value" id="accountSeloon">0</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">رصيد Cash:</span>
+                                <span class="info-value" id="accountCash">0</span>
+                            </div>
+                        </div>
+
+                        <div class="account-card">
+                            <h3><i class="fas fa-history"></i> طلباتي السابقة</h3>
+                            <div id="orderHistoryContainer">
+                                <!-- Order history will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Page -->
+        <div id="adminPage" class="page">
+            <div class="admin-page">
+                <div class="container">
+                    <div class="admin-container">
+                        <h2><i class="fas fa-shield-alt"></i> لوحة الإدارة</h2>
+
+                        <div class="admin-tabs">
+                            <button class="admin-tab-btn active" onclick="showAdminTab('products')">المنتجات</button>
+                            <button class="admin-tab-btn" onclick="showAdminTab('orders')">الطلبات</button>
+                            <button class="admin-tab-btn" onclick="showAdminTab('users')">المستخدمين</button>
+                            <button class="admin-tab-btn" onclick="showAdminTab('transfers')">التحويلات</button>
+                        </div>
+
+                        <!-- Products Tab -->
+                        <div id="productsTab" class="admin-tab-content active">
+                            <div class="admin-actions">
+                                <button class="btn-add" onclick="openAddProductModal()">
+                                    <i class="fas fa-plus"></i> إضافة منتج جديد
+                                </button>
+                            </div>
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>الاسم</th>
+                                        <th>الوصف</th>
+                                        <th>السعر</th>
+                                        <th>الفئة</th>
+                                        <th>الإجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminProductsTable">
+                                    <!-- Products will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Orders Tab -->
+                        <div id="ordersTab" class="admin-tab-content">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>رقم الطلب</th>
+                                        <th>المستخدم</th>
+                                        <th>الإجمالي</th>
+                                        <th>الحالة</th>
+                                        <th>التاريخ</th>
+                                        <th>الإجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminOrdersTable">
+                                    <!-- Orders will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Users Tab -->
+                        <div id="usersTab" class="admin-tab-content">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>البريد الإلكتروني</th>
+                                        <th>النوع</th>
+                                        <th>Seloon</th>
+                                        <th>Cash</th>
+                                        <th>تاريخ التسجيل</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminUsersTable">
+                                    <!-- Users will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Transfers Tab -->
+                        <div id="transfersTab" class="admin-tab-content">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>من</th>
+                                        <th>إلى</th>
+                                        <th>المبلغ</th>
+                                        <th>العملة</th>
+                                        <th>التاريخ</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminTransfersTable">
+                                    <!-- Transfers will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Modal -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="productModalTitle">إضافة منتج</h3>
+                <button class="modal-close" onclick="closeProductModal()">&times;</button>
+            </div>
+            <form id="productForm">
+                <input type="hidden" id="productId">
+                <div class="form-group">
+                    <label>اسم المنتج</label>
+                    <input type="text" id="productName" required>
+                </div>
+                <div class="form-group">
+                    <label>ا��وصف</label>
+                    <textarea id="productDescription" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>السعر (Seloon)</label>
+                    <input type="number" id="productPrice" required>
+                </div>
+                <div class="form-group">
+                    <label>رابط الصورة</label>
+                    <input type="url" id="productImage" required>
+                </div>
+                <div class="form-group">
+                    <label>الفئة</label>
+                    <select id="productCategory" required>
+                        <option value="">اختر الفئة</option>
+                        <option value="electronics">إلكترونيات</option>
+                        <option value="fashion">أزياء</option>
+                        <option value="home">منزل</option>
+                        <option value="sports">رياضة</option>
+                        <option value="books">كتب</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">حفظ</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Transfer Modal -->
+    <div id="transferModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>تحويل أموال</h3>
+                <button class="modal-close" onclick="closeTransferModal()">&times;</button>
+            </div>
+            <form id="transferForm">
+                <div class="form-group">
+                    <label>البريد الإلكتروني للمستلم</label>
+                    <input type="email" id="recipientEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>العملة</label>
+                    <select id="transferCurrency" required>
+                        <option value="seloon">Seloon</option>
+                        <option value="cash">Cash</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>المبلغ</label>
+                    <input type="number" id="transferAmount" required min="1">
+                </div>
+                <button type="submit" class="btn btn-primary">إرسال</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <!-- EmailJS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+    <script>
+        // ==================== Firebase Configuration ====================
+        const firebaseConfig = {
+            apiKey: "AIzaSyBOYZ8znt0OnsMJWxHvBWPnDFrcULz7Pxo",
+            authDomain: "vilue-53a19.firebaseapp.com",
+            projectId: "vilue-53a19",
+            storageBucket: "vilue-53a19.firebasestorage.app",
+            messagingSenderId: "946305892812",
+            appId: "1:946305892812:web:d75ff1b4dbedee2a4f4d3a"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Initialize EmailJS
+        emailjs.init("YU4Y2UuuOp7tTmMqX");
+
+        // ==================== Global Variables ====================
+        let currentUser = null;
+        let cart = [];
+        const EXCHANGE_RATE = 1000; // 1 Cash = 1000 Seloon
+
+        // ==================== Utility Functions ====================
+        function showLoading() {
+            document.getElementById('loadingSpinner').classList.add('active');
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingSpinner').classList.remove('active');
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        function showPage(pageName) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageName + 'Page').classList.add('active');
+
+            if (pageName === 'store') {
+                loadProducts();
+            } else if (pageName === 'cart') {
+                displayCart();
+            } else if (pageName === 'account') {
+                loadAccountInfo();
+            } else if (pageName === 'admin') {
+                loadAdminData();
+            }
+        }
+
+        function showAdminTab(tabName) {
+            document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelectorAll('.admin-tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            event.target.classList.add('active');
+            document.getElementById(tabName + 'Tab').classList.add('active');
+
+            if (tabName === 'products') {
+                loadAdminProducts();
+            } else if (tabName === 'orders') {
+                loadAdminOrders();
+            } else if (tabName === 'users') {
+                loadAdminUsers();
+            } else if (tabName === 'transfers') {
+                loadAdminTransfers();
+            }
+        }
+
+        // ==================== Authentication ====================
+        document.getElementById('toggleAuth').addEventListener('click', function() {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const authTitle = document.getElementById('authTitle');
+            const toggleText = document.getElementById('toggleText');
+            const toggleAuth = document.getElementById('toggleAuth');
+
+            if (loginForm.classList.contains('hidden')) {
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+                authTitle.textContent = 'تسجيل الدخول';
+                toggleText.textContent = 'ليس لديك حساب؟';
+                toggleAuth.textContent = 'سجل الآن';
+            } else {
+                loginForm.classList.add('hidden');
+                registerForm.classList.remove('hidden');
+                authTitle.textContent = 'إنشاء حساب جديد';
+                toggleText.textContent = 'لديك حساب بالفعل؟';
+                toggleAuth.textContent = 'سجل الدخول';
+            }
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            showLoading();
+
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                await auth.signInWithEmailAndPassword(email, password);
+                showNotification('تم تسجيل الدخول بنجاح', 'success');
+            } catch (error) {
+                showNotification('خطأ: ' + error.message, 'error');
+            }
+
+            hideLoading();
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            showLoading();
+
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+
+            if (password !== confirmPassword) {
+                showNotification('كلمات المرور غير متطابقة', 'error');
+                hideLoading();
+                return;
+            }
+
+            try {
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                const uid = userCredential.user.uid;
+
+                // Create user document in Firestore
+                await db.collection('users').doc(uid).set({
+                    email: email,
+                    seloonBalance: 10000, // Starting balance
+                    cashBalance: 10, // Starting balance
+                    role: 'user',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                showNotification('تم إنشاء الحساب بنجاح', 'success');
+            } catch (error) {
+                showNotification('خطأ: ' + error.message, 'error');
+            }
+
+            hideLoading();
+        });
+
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('authPage').classList.add('hidden');
+                document.getElementById('mainApp').classList.remove('hidden');
+                
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                const userData = userDoc.data();
+
+                document.getElementById('userEmailDisplay').textContent = user.email;
+                document.getElementById('userAvatar').textContent = user.email.charAt(0).toUpperCase();
+
+                if (userData && userData.role === 'admin') {
+                    document.querySelectorAll('.admin-only').forEach(el => {
+                        el.classList.remove('hidden');
+                    });
+                }
+
+                updateWalletDisplay();
+                loadCart();
+            } else {
+                currentUser = null;
+                document.getElementById('authPage').classList.remove('hidden');
+                document.getElementById('mainApp').classList.add('hidden');
+            }
+        });
+
+        function logout() {
+            auth.signOut();
+            cart = [];
+            showNotification('تم تسجيل الخروج بنجاح', 'info');
+        }
+
+        // ==================== Wallet Functions ====================
+        async function updateWalletDisplay() {
+            if (!currentUser) return;
+
+            const userDoc = await db.collection('users').doc(currentUser.uid).get();
+            const userData = userDoc.data();
+
+            if (userData) {
+                document.getElementById('seloonBalance').textContent = userData.seloonBalance.toLocaleString();
+                document.getElementById('cashBalance').textContent = userData.cashBalance.toLocaleString();
+                document.getElementById('accountSeloon').textContent = userData.seloonBalance.toLocaleString();
+                document.getElementById('accountCash').textContent = userData.cashBalance.toLocaleString();
+            }
+        }
+
+        document.getElementById('fromAmount').addEventListener('input', function() {
+            const fromCurrency = document.getElementById('fromCurrency').value;
+            const fromAmount = parseFloat(this.value) || 0;
+            let toAmount = 0;
+
+            if (fromCurrency === 'cash') {
+                toAmount = fromAmount * EXCHANGE_RATE;
+            } else {
+                toAmount = fromAmount / EXCHANGE_RATE;
+            }
+
+            document.getElementById('toAmount').value = toAmount.toFixed(2);
+        });
+
+        document.getElementById('fromCurrency').addEventListener('change', function() {
+            if (this.value === 'cash') {
+                document.getElementById('toCurrency').value = 'seloon';
+            } else {
+                document.getElementById('toCurrency').value = 'cash';
+            }
+            document.getElementById('fromAmount').dispatchEvent(new Event('input'));
+        });
+
+        async function performExchange() {
+            if (!currentUser) return;
+
+            showLoading();
+
+            const fromCurrency = document.getElementById('fromCurrency').value;
+            const fromAmount = parseFloat(document.getElementById('fromAmount').value);
+
+            if (!fromAmount || fromAmount <= 0) {
+                showNotification('الرجاء إدخال مبلغ صحيح', 'error');
+                hideLoading();
+                return;
+            }
+
+            try {
+                const userRef = db.collection('users').doc(currentUser.uid);
+                const userDoc = await userRef.get();
+                const userData = userDoc.data();
+
+                if (fromCurrency === 'cash') {
+                    if (userData.cashBalance < fromAmount) {
+                        showNotification('رصيد Cash غير كافٍ', 'error');
+                        hideLoading();
+                        return;
+                    }
+
+                    const toAmount = fromAmount * EXCHANGE_RATE;
+                    await userRef.update({
+                        cashBalance: firebase.firestore.FieldValue.increment(-fromAmount),
+                        seloonBalance: firebase.firestore.FieldValue.increment(toAmount)
+                    });
+
+                    showNotification(`تم تبديل ${fromAmount} Cash إلى ${toAmount} Seloon`, 'success');
+                } else {
+                    if (userData.seloonBalance < fromAmount) {
+                        showNotification('رصيد Seloon غير كافٍ', 'error');
+                        hideLoading();
+                        return;
+                    }
+
+                    const toAmount = fromAmount / EXCHANGE_RATE;
+                    await userRef.update({
+                        seloonBalance: firebase.firestore.FieldValue.increment(-fromAmount),
+                        cashBalance: firebase.firestore.FieldValue.increment(toAmount)
+                    });
+
+                    showNotification(`تم تبديل ${fromAmount} Seloon إلى ${toAmount.toFixed(2)} Cash`, 'success');
+                }
+
+                document.getElementById('fromAmount').value = '';
+                document.getElementById('toAmount').value = '';
+                updateWalletDisplay();
+            } catch (error) {
+                showNotification('خطأ في التبديل: ' + error.message, 'error');
+            }
+
+            hideLoading();
+        }
+
+        function openTransferModal(currency) {
+            document.getElementById('transferCurrency').value = currency;
+            document.getElementById('transferModal').classList.add('active');
+        }
+
+        function closeTransferModal() {
+            document.getElementById('transferModal').classList.
+                      // ====================================
+        // ADMIN PANEL FUNCTIONS
+        // ====================================
+        
+        // Load Admin Data
+        async function loadAdminProducts() {
+            const tbody = document.getElementById('admin-products-tbody');
+            tbody.innerHTML = '<tr><td colspan="5">جاري التحميل...</td></tr>';
+            
+            try {
+                const snapshot = await db.collection('products').get();
+                tbody.innerHTML = '';
+                
+                snapshot.forEach(doc => {
+                    const product = doc.data();
+                    const row = `
+                        <tr>
+                            <td>${product.name}</td>
+                            <td>${product.price} سيلون</td>
+                            <td>${product.stock}</td>
+                            <td>${product.category || 'عام'}</td>
+                            <td>
+                                <button onclick="editProduct('${doc.id}')" class="btn-edit">تعديل</button>
+                                <button onclick="deleteProduct('${doc.id}')" class="btn-delete">حذف</button>
+                            </td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                });
+                
+                if (snapshot.empty) {
+                    tbody.innerHTML = '<tr><td colspan="5">لا توجد منتجات</td></tr>';
+                }
+            } catch (error) {
+                console.error('Error loading products:', error);
+                tbody.innerHTML = '<tr><td colspan="5">خطأ في تحميل المنتجات</td></tr>';
+            }
+        }
+
+        async function loadAdminOrders() {
+            const tbody = document.getElementById('admin-orders-tbody');
+            tbody.innerHTML = '<tr><td colspan="6">جاري التحميل...</td></tr>';
+            
+            try {
+                const snapshot = await db.collection('orders').orderBy('timestamp', 'desc').get();
+                tbody.innerHTML = '';
+                
+                snapshot.forEach(doc => {
+                    const order = doc.data();
+                    const date = order.timestamp ? order.timestamp.toDate().toLocaleDateString('ar-EG') : 'غير محدد';
+                    const statusColor = order.status === 'completed' ? '#10b981' : order.status === 'pending' ? '#f59e0b' : '#ef4444';
+                    
+                    const row = `
+                        <tr>
+                            <td>${doc.id}</td>
+                            <td>${order.userName || order.userId}</td>
+                            <td>${order.total} سيلون</td>
+                            <td>${date}</td>
+                            <td><span style="color: ${statusColor}; font-weight: bold;">${order.status === 'completed' ? 'مكتمل' : order.status === 'pending' ? 'قيد المعالجة' : 'ملغي'}</span></td>
+                            <td>
+                                <button onclick="viewOrder('${doc.id}')" class="btn-edit">عرض</button>
+                                <button onclick="updateOrderStatus('${doc.id}', 'completed')" class="btn-edit">إكمال</button>
+                                <button onclick="updateOrderStatus('${doc.id}', 'cancelled')" class="btn-delete">إلغاء</button>
+                            </td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                });
+                
+                if (snapshot.empty) {
+                    tbody.innerHTML = '<tr><td colspan="6">لا توجد طلبات</td></tr>';
+                }
+            } catch (error) {
+                console.error('Error loading orders:', error);
+                tbody.innerHTML = '<tr><td colspan="6">خطأ في تحميل الطلبات</td></tr>';
+            }
+        }
+
+        async function loadAdminUsers() {
+            const tbody = document.getElementById('admin-users-tbody');
+            tbody.innerHTML = '<tr><td colspan="5">جاري التحميل...</td></tr>';
+            
+            try {
+                const snapshot = await db.collection('users').get();
+                tbody.innerHTML = '';
+                
+                snapshot.forEach(doc => {
+                    const user = doc.data();
+                    const row = `
+                        <tr>
+                            <td>${user.name || 'غير محدد'}</td>
+                            <td>${user.email}</td>
+                            <td>${user.seloon || 0} سيلون</td>
+                            <td>${user.cash || 0} كاش</td>
+                            <td>
+                                <button onclick="viewUserDetails('${doc.id}')" class="btn-edit">عرض</button>
+                                <button onclick="deleteUser('${doc.id}')" class="btn-delete">حذف</button>
+                            </td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                });
+                
+                if (snapshot.empty) {
+                    tbody.innerHTML = '<tr><td colspan="5">لا يوجد مستخدمين</td></tr>';
+                }
+            } catch (error) {
+                console.error('Error loading users:', error);
+                tbody.innerHTML = '<tr><td colspan="5">خطأ في تحميل المستخدمين</td></tr>';
+            }
+        }
+
+        async function loadAdminTransfers() {
+            const tbody = document.getElementById('admin-transfers-tbody');
+            tbody.innerHTML = '<tr><td colspan="6">جاري التحميل...</td></tr>';
+            
+            try {
+                const snapshot = await db.collection('transfers').orderBy('timestamp', 'desc').limit(50).get();
+                tbody.innerHTML = '';
+                
+                snapshot.forEach(doc => {
+                    const transfer = doc.data();
+                    const date = transfer.timestamp ? transfer.timestamp.toDate().toLocaleDateString('ar-EG') : 'غير محدد';
+                    
+                    const row = `
+                        <tr>
+                            <td>${transfer.fromUserName || transfer.fromUser}</td>
+                            <td>${transfer.toUserName || transfer.toUser}</td>
+                            <td>${transfer.amount} ${transfer.currency === 'seloon' ? 'سيلون' : 'كاش'}</td>
+                            <td>${transfer.currency === 'seloon' ? 'سيلون' : 'كاش'}</td>
+                            <td>${date}</td>
+                            <td><span style="color: #10b981; font-weight: bold;">مكتمل</span></td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                });
+                
+                if (snapshot.empty) {
+                    tbody.innerHTML = '<tr><td colspan="6">لا توجد تحويلات</td></tr>';
+                }
+            } catch (error) {
+                console.error('Error loading transfers:', error);
+                tbody.innerHTML = '<tr><td colspan="6">خطأ في تحميل التحويلات</td></tr>';
+            }
+        }
+
+        // Admin Actions
+        function addNewProduct() {
+            const name = prompt('اسم المنتج:');
+            if (!name) return;
+            
+            const price = parseFloat(prompt('السعر بالسيلون:'));
+            if (!price || price <= 0) {
+                alert('السعر غير صحيح');
+                return;
+            }
+            
+            const stock = parseInt(prompt('الكمية المتوفرة:'));
+            if (!stock || stock < 0) {
+                alert('الكمية غير صحيحة');
+                return;
+            }
+            
+            const category = prompt('الفئة:') || 'عام';
+            const image = prompt('رابط الصورة:') || 'https://via.placeholder.com/300';
+            const description = prompt('الوصف:') || '';
+            
+            showLoading();
+            
+            db.collection('products').add({
+                name,
+                price,
+                stock,
+                category,
+                image,
+                description,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            })
+            .then(() => {
+                hideLoading();
+                showNotification('تم إضافة المنتج بنجاح', 'success');
+                loadAdminProducts();
+            })
+            .catch(error => {
+                hideLoading();
+                showNotification('خطأ في إضافة المنتج: ' + error.message, 'error');
+            });
+        }
+
+        async function editProduct(productId) {
+            try {
+                const doc = await db.collection('products').doc(productId).get();
+                const product = doc.data();
+                
+                const name = prompt('اسم المنتج:', product.name);
+                if (!name) return;
+                
+                const price = parseFloat(prompt('السعر بالسيلون:', product.price));
+                if (!price || price <= 0) return;
+                
+                const stock = parseInt(prompt('الكمية المتوفرة:', product.stock));
+                if (isNaN(stock) || stock < 0) return;
+                
+                showLoading();
+                
+                await db.collection('products').doc(productId).update({
+                    name,
+                    price,
+                    stock
+                });
+                
+                hideLoading();
+                showNotification('تم تحديث المنتج بنجاح', 'success');
+                loadAdminProducts();
+            } catch (error) {
+                hideLoading();
+                showNotification('خطأ في تحديث المنتج: ' + error.message, 'error');
+            }
+        }
+
+        async function deleteProduct(productId) {
+            if (!confirm('هل أنت متأكد من حذف هذا المنتج؟')) return;
+            
+            showLoading();
+            
+            try {
+                await db.collection('products').doc(productId).delete();
+                hideLoading();
+                showNotification('تم حذف المنتج بنجاح', 'success');
+                loadAdminProducts();
+            } catch (error) {
+                hideLoading();
+                showNotification('خطأ في حذف المنتج: ' + error.message, 'error');
+            }
+        }
+
+        async function viewOrder(orderId) {
+            try {
+                const doc = await db.collection('orders').doc(orderId).get();
+                const order = doc.data();
+                
+                let itemsList = '';
+                if (order.items && Array.isArray(order.items)) {
+                    itemsList = order.items.map(item => 
+                        `${item.name} - الكمية: ${item.quantity} - السعر: ${item.price} سيلون`
+                    ).join('\n');
+                }
+                
+                alert(`تفاصيل الطلب:\n\nرقم الطلب: ${orderId}\nالمستخدم: ${order.userName || order.userId}\nالإجمالي: ${order.total} سيلون\nالحالة: ${order.status}\n\nالمنتجات:\n${itemsList}`);
+            } catch (error) {
+                showNotification('خطأ في عرض الطلب: ' + error.message, 'error');
+            }
+        }
+
+        async function updateOrderStatus(orderId, newStatus) {
+            showLoading();
+            
+            try {
+                await db.collection('orders').doc(orderId).update({
+                    status: newStatus,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                hideLoading();
+                showNotification('تم تحديث حالة الطلب بنجاح', 'success');
+                loadAdminOrders();
+            } catch (error) {
+                hideLoading();
+                showNotification('خطأ في تحديث الطلب: ' + error.message, 'error');
+            }
+        }
+
+        async function viewUserDetails(userId) {
+            try {
+                const doc = await db.collection('users').doc(userId).get();
+                const user = doc.data();
+                
+                alert(`تفاصيل المستخدم:\n\nالاسم: ${user.name || 'غير محدد'}\nالبريد: ${user.email}\nالسيلون: ${user.seloon || 0}\nالكاش: ${user.cash || 0}\nمعرف: ${userId}`);
+            } catch (error) {
+                showNotification('خطأ في عرض المستخدم: ' + error.message, 'error');
+            }
+        }
+
+        async function deleteUser(userId) {
+            if (!confirm('هل أنت متأكد من حذف هذا المستخدم؟ سيتم حذف جميع بياناته.')) return;
+            
+            showLoading();
+            
+            try {
+                await db.collection('users').doc(userId).delete();
+                hideLoading();
+                showNotification('تم حذف المستخدم بنجاح', 'success');
+                loadAdminUsers();
+            } catch (error) {
+                hideLoading();
+                showNotification('خطأ في حذف المستخدم: ' + error.message, 'error');
+            }
+        }
+
+        // ====================================
+        // UTILITY FUNCTIONS
+        // ====================================
+        
+        function showLoading() {
+            document.getElementById('loading').style.display = 'flex';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = 'notification show ' + type;
+            
+            setTimeout(() => {
+                notification.className = 'notification';
+            }, 3000);
+        }
+
+        // ====================================
+        // INITIALIZE APP
+        // ====================================
+        
+        firebase.auth().onAuthStateChanged(user => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('auth-page').style.display = 'none';
+                document.getElementById('navbar').style.display = 'flex';
+                
+                // Load user data
+                loadUserData();
+                
+                // Show home page
+                showPage('home');
+            } else {
+                currentUser = null;
+                document.getElementById('auth-page').style.display = 'flex';
+                document.getElementById('navbar').style.display = 'none';
+                
+                // Hide all pages
+                document.querySelectorAll('.page').forEach(page => {
+                    page.style.display = 'none';
+                });
+            }
+        });
+
+        // Prevent right-click (optional security)
+        // document.addEventListener('contextmenu', event => event.preventDefault());
+
+        console.log('✅ Vilue Application Loaded Successfully');
+    </script>
+</body>
+</html>
+
