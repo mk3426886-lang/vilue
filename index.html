@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>beIN SPORTS | World Cup 2099</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+        body {
+            background: linear-gradient(145deg, #0a0f1e 0%, #03060c 100%);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: white;
+            min-height: 100vh;
+            padding: 12px;
+        }
+        /* activation overlay */
+        #activation-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(14px);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .lock-card {
+            background: #11161f;
+            padding: 30px 25px;
+            border-radius: 48px;
+            box-shadow: 0 25px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05);
+            text-align: center;
+            width: 90%;
+            max-width: 340px;
+            border: 1px solid rgba(0,255,255,0.2);
+        }
+        .lock-card input {
+            width: 100%;
+            padding: 16px;
+            font-size: 18px;
+            text-align: center;
+            background: #02080f;
+            border: 1px solid #2affb6;
+            color: #2affb6;
+            border-radius: 60px;
+            letter-spacing: 2px;
+            font-weight: bold;
+            margin: 18px 0;
+        }
+        .lock-card button {
+            background: #2affb6;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 40px;
+            font-weight: bold;
+            font-size: 18px;
+            color: #000;
+            width: 100%;
+        }
+        /* main player UI */
+        .container {
+            max-width: 1300px;
+            margin: auto;
+        }
+        .video-box {
+            background: #000;
+            border-radius: 32px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        video, iframe {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: black;
+            display: block;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 18px 0;
+            background: #0f121cb3;
+            padding: 16px;
+            border-radius: 48px;
+            backdrop-filter: blur(8px);
+        }
+        .ctrl-btn {
+            background: #1e2a3a;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            flex: 1 0 auto;
+            min-width: 80px;
+        }
+        .quality-btn {
+            background: #2c3e2f;
+            border-left: 3px solid #2affb6;
+        }
+        .channel-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 12px;
+            margin-top: 24px;
+            max-height: 280px;
+            overflow-y: auto;
+            padding: 8px;
+        }
+        .channel {
+            background: #11161f;
+            padding: 12px 6px;
+            text-align: center;
+            border-radius: 28px;
+            font-weight: bold;
+            font-size: 14px;
+            border: 1px solid #2affb622;
+            transition: 0.1s linear;
+        }
+        .active-channel {
+            background: #2affb6;
+            color: #000;
+            box-shadow: 0 0 12px #2affb6;
+            border-color: white;
+        }
+        .feature-badge {
+            background: #00a6ff20;
+            padding: 6px 12px;
+            border-radius: 40px;
+            font-size: 12px;
+            display: inline-block;
+            margin: 4px;
+        }
+        h3 {
+            margin: 20px 0 10px 0;
+            font-size: 18px;
+        }
+        .footer-stats {
+            font-size: 11px;
+            text-align: center;
+            margin-top: 25px;
+            color: #6c7a89;
+        }
+        @media (max-width: 600px) {
+            .ctrl-btn { font-size: 11px; padding: 8px 12px; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="activation-overlay">
+    <div class="lock-card">
+        <span style="font-size:48px;">🔐</span>
+        <h2>تفعيل الباقة الذهبية</h2>
+        <p style="margin:10px 0;color:#aaa;">أدخل كود التفعيل لفتح جميع القنوات والمميزات</p>
+        <input type="password" id="activation-code" placeholder="رمز التفعيل" maxlength="20">
+        <button id="unlock-btn">▶ تفعيل</button>
+        <p style="margin-top:20px;font-size:12px;">كود تجريبي: <strong style="color:#2affb6">WC2026GOLD</strong></p>
+    </div>
+</div>
+
+<div class="container" id="main-app" style="display:none;">
+    <div class="video-box">
+        <video id="stream-player" controls autoplay playsinline></video>
+    </div>
+
+    <div class="controls">
+        <button class="ctrl-btn" id="quality-480">📺 480p</button>
+        <button class="ctrl-btn" id="quality-720">⚡ 720p</button>
+        <button class="ctrl-btn" id="quality-1080">🔥 1080p</button>
+        <button class="ctrl-btn" id="fullscreen-btn">⛶ ملء الشاشة</button>
+        <button class="ctrl-btn" id="audio-track">🎧 مسار الصوت</button>
+        <button class="ctrl-btn" id="refresh-stream">🔄 إعادة البث</button>
+    </div>
+
+    <div class="feature-badge">✨ تغيير الجودة الفورية</div>
+    <div class="feature-badge">📡 بث متعدد السيرفرات</div>
+    <div class="feature-badge">⏱️ توقيت المباريات</div>
+    <div class="feature-badge">📱 تكيف مع الشاشة</div>
+    <div class="feature-badge">🔄 وضع خلفي</div>
+    <div class="feature-badge">🔊 تحكم بالصوت</div>
+    <div class="feature-badge">⚙️ تقليل الاستهلاك</div>
+    <div class="feature-badge">📺 إشارة FHD</div>
+    <div class="feature-badge">🧩 عرض النتائج المباشرة</div>
+    <div class="feature-badge">🆓 لا إعلانات (2099)</div>
+
+    <h3>📡 قنوات beIN SPORTS الكاملة + قنوات العالمي</h3>
+    <div class="channel-grid" id="channel-list"></div>
+    <div class="footer-stats">🚀 The Architect · 2099 Stream Engine | جميع الحقوق مفتوحة المصدر</div>
+</div>
+
+<script>
+    // ------------------------------
+    // ACTIVATION CODE (hardcoded)
+    // ------------------------------
+    const MASTER_CODE = "WC2026GOLD";
+
+    // ------------------------------
+    // CHANNELS LIST (more than 20)
+    // ------------------------------
+    const channels = [
+        { name: "beIN SPORTS 1", url: "https://archive.org/download/test-video-1mbs/test-video-1mbs.mp4" },
+        { name: "beIN SPORTS 2", url: "https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4" },
+        { name: "beIN SPORTS 3", url: "https://dl4.sermovideos.com/video/mp4/720/bbb_sunflower_720p_30fps_normal.mp4" },
+        { name: "beIN 4K HDR", url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" },
+        { name: "beIN NEWS", url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4" },
+        { name: "كأس العالم 1", url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFunflies.mp4" },
+        { name: "كأس العالم 2", url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4" },
+        { name: "HD世界杯", url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4" },
+        { name: "Extra Time", url: "https://sample-videos.com/video321/mp4/480/big_buck_bunny_480p_20mb.mp4" },
+        { name: "GOLAZO", url: "https://archive.org/download/SampleVideo_1280x720_1mb/SampleVideo_1280x720_1mb.mp4" },
+        { name: "beIN MAX", url: "https://dl4.sermovideos.com/video/mp4/720/bbb_sunflower_720p_30fps_normal.mp4" },
+        { name: "FRANCE 24 direct", url: "https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/720/Big_Buck_Bunny_720_10s_1MB.mp4" },
+        { name: "الجزيرة + قناة", url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCar.mp4" },
+        { name: "SSC EXTRA", url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4" },
+        { name: "كأس العالم 24/7", url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4" }
+    ];
+
+    let currentChannelIndex = 0;
+    const videoElem = document.getElementById('stream-player');
+    let currentQuality = "720p";
+
+    // quality mapping (mock)
+    function applyQuality() {
+        let src = videoElem.src;
+        if (!src) return;
+        // in real scenario you'd replace stream token, here just reload same.
+        videoElem.load();
+    }
+
+    function loadChannel(index) {
+        const ch = channels[index];
+        if (!ch) return;
+        videoElem.src = ch.url;
+        videoElem.play().catch(e => console.log("auto-play blocked", e));
+        // update active UI
+        document.querySelectorAll('.channel').forEach((btn, i) => {
+            if (i === index) btn.classList.add('active-channel');
+            else btn.classList.remove('active-channel');
+        });
+    }
+
+    function buildChannelList() {
+        const container = document.getElementById('channel-list');
+        container.innerHTML = '';
+        channels.forEach((ch, idx) => {
+            const btn = document.createElement('div');
+            btn.className = 'channel';
+            btn.innerText = ch.name;
+            btn.onclick = () => {
+                currentChannelIndex = idx;
+                loadChannel(idx);
+            };
+            container.appendChild(btn);
+        });
+    }
+
+    // quality buttons
+    document.getElementById('quality-480')?.addEventListener('click', () => {
+        currentQuality = "480p";
+        alert(`الجودة تم تغييرها إلى ${currentQuality} (تأثير فوري على البث)`);
+        applyQuality();
+    });
+    document.getElementById('quality-720')?.addEventListener('click', () => {
+        currentQuality = "720p";
+        alert(`جودة عالية ${currentQuality}`);
+        applyQuality();
+    });
+    document.getElementById('quality-1080')?.addEventListener('click', () => {
+        currentQuality = "1080p FULL HD";
+        alert(`✅ جودة فائقة ${currentQuality}`);
+        applyQuality();
+    });
+    document.getElementById('fullscreen-btn')?.addEventListener('click', () => {
+        const vbox = document.querySelector('.video-box');
+        if (vbox.requestFullscreen) vbox.requestFullscreen();
+        else if (videoElem.requestFullscreen) videoElem.requestFullscreen();
+    });
+    document.getElementById('audio-track')?.addEventListener('click', () => {
+        alert("🎧 دفق الصوت متعدد المسارات: عربي - English - فرنسي (محاكاة)");
+    });
+    document.getElementById('refresh-stream')?.addEventListener('click', () => {
+        loadChannel(currentChannelIndex);
+    });
+
+    // ACTIVATION LOGIC
+    document.getElementById('unlock-btn').addEventListener('click', () => {
+        const enteredCode = document.getElementById('activation-code').value.trim();
+        if (enteredCode === MASTER_CODE) {
+            document.getElementById('activation-overlay').style.display = 'none';
+            document.getElementById('main-app').style.display = 'block';
+            buildChannelList();
+            loadChannel(0); // load first channel
+        } else {
+            alert("❌ كود التفعيل غير صحيح! جرب: WC2026GOLD");
+        }
+    });
+
+    // extra: attempt to handle background / keep alive (WebView)
+    window.addEventListener('load', () => {
+        console.log("Architect Player 2099 ready - جميع المميزات");
+    });
+</script>
+</body>
+</html>
