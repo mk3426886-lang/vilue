@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر ليون الذكي | LION STORE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- الترويسة العلوية الاحترافية -->
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo-section">
+                <img src="logo.png" alt="شعار متجر ليون" class="store-logo" onerror="this.src='https://placehold.co/60x60/ff6a00/fff?text=LION'">
+                <div class="brand-info">
+                    <h1>متجر ليون</h1>
+                    <a href="https://www.tiktok.com/@lione_market" target="_blank" class="tiktok-link">@lione_market</a>
+                </div>
+            </div>
+
+            <!-- بار البحث المطور و أزرار السلة -->
+            <div class="header-controls">
+                <div class="search-box">
+                    <input type="text" id="searchInput" oninput="searchProducts()" placeholder="ابحث عن جهاز، ماوس، إكسسوار...">
+                    <span class="search-icon">🔍</span>
+                </div>
+                
+                <div class="cart-trigger" onclick="toggleCartSidebar()">
+                    <span class="cart-icon">🛒</span>
+                    <span class="cart-badge" id="cartBadge">0</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- الفلاتر السريعة للمنتجات -->
+    <div class="category-bar">
+        <button class="category-btn active" onclick="filterCategory('all')">الكل</button>
+        <button class="category-btn" onclick="filterCategory('أجهزة')">أجهزة ذكية</button>
+        <button class="category-btn" onclick="filterCategory('إكسسوارات')">إكسسوارات</button>
+        <button class="category-btn" onclick="filterCategory('أخرى')">أخرى</button>
+    </div>
+
+    <!-- جسم المتجر الرئيسي -->
+    <main class="store-container">
+        <section class="products-section">
+            <div class="products-grid" id="productsContainer">
+                <!-- المنتجات تتولد هنا تلقائياً -->
+            </div>
+        </section>
+    </main>
+
+    <!-- الجانب الأيمن المنزلق (سلة المشتريات الحديثة) -->
+    <aside class="cart-sidebar" id="cartSidebar">
+        <div class="cart-sidebar-header">
+            <h3>سلة المشتريات 🛍️</h3>
+            <button class="close-sidebar-btn" onclick="toggleCartSidebar()">✕</button>
+        </div>
+        
+        <div class="cart-items-wrapper" id="cartItems">
+            <p class="empty-cart-msg">سلتك فارغة، تصفح المتجر وأضف منتجات!</p>
+        </div>
+        
+        <div class="cart-sidebar-footer">
+            <div class="coupon-box">
+                <input type="text" id="couponInput" placeholder="كود الخصم">
+                <button onclick="applyCoupon()">تطبيق</button>
+            </div>
+            
+            <div class="bill-details">
+                <div class="bill-row"><span>المجموع الفرعي:</span><span id="cartSubtotal">0 م.ي</span></div>
+                <div class="bill-row discount" id="discountRow" style="display:none;"><span>الخصم:</span><span id="cartDiscount">0 م.ي</span></div>
+                <div class="bill-row"><span>أجور التوصيل:</span><span id="shippingDisplay">يحدد عند اختيار المحافظة</span></div>
+                <div class="bill-row total"><span>الإجمالي الكلي:</span><span id="cartTotal">0 م.ي</span></div>
+            </div>
+            
+            <button class="checkout-submit-btn" onclick="openCheckoutModal()">تأكيد وإكمال الطلب ←</button>
+        </div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleCartSidebar()"></div>
+
+    <!-- نافذة معلومات العميل الذكية (محافظات ومناطق) -->
+    <div class="modal-overlay" id="checkoutModal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeCheckoutModal()">✕</button>
+            <h3>📍 معلومات الشحن والتوصيل</h3>
+            <form id="checkoutForm" onsubmit="handleFormSubmit(event)">
+                <div class="form-group">
+                    <label>الاسم الكامل الثلاثي:</label>
+                    <input type="text" id="clientName" required placeholder="مثال: علي أحمد حسين">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>المحافظة:</label>
+                        <select id="clientProvince" required onchange="handleProvinceChange()">
+                            <option value="">اختر المحافظة...</option>
+                            <option value="النجف">النجف الأشرف</option>
+                            <option value="بغداد">بغداد</option>
+                            <option value="البصرة">البصرة</option>
+                            <option value="بابل">بابل</option>
+                            <option value="كربلاء">كربلاء المقدسة</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>المنطقة / القضاء:</label>
+                        <select id="clientRegion" required disabled>
+                            <option value="">اختر المنطقة...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>أقرب نقطة دالة:</label>
+                    <input type="text" id="clientLandmark" required placeholder="مثال: قرب جامع ... أو مدرسة ...">
+                </div>
+
+                <div class="form-group">
+                    <label>رقم الهاتف المتاح:</label>
+                    <input type="tel" id="clientPhone" required placeholder="077XXXXXXXX">
+                </div>
+
+                <button type="submit" class="final-order-btn">توليد كود الطلب والفاتورة</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- نافذة الفاتورة النهائية وتأكيد الواتساب -->
+    <div class="modal-overlay" id="receiptModal">
+        <div class="modal-content receipt-card">
+            <div class="success-checkmark">🎉</div>
+            <h3>تم تجهيز طلبك بنجاح!</h3>
+            <p style="text-align: center; font-size: 0.9rem; color: #666;">اضغط على الزر أدناه لإرسال الفاتورة تلقائياً للمدير عبر الواتساب لتأكيد الحجز.</p>
+            
+            <div class="receipt-invoice-box">
+                <div class="invoice-header">
+                    <span>رقم الطلب: <strong id="orderIdDisplay">#0000</strong></span>
+                </div>
+                <div id="receiptDetails"></div>
+            </div>
+
+            <button class="whatsapp-btn" onclick="sendToWhatsApp()">
+                إرسال الفاتورة عبر الواتساب وتأكيد الشحن
+            </button>
+        </div>
+    </div>
+
+    <!-- حاوية الإشعارات المنبثقة الذكية (Toasts) -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
