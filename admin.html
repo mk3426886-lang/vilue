@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة إدارة متجر ليون</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .login-body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #f0f2f5; }
+        .login-box { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; width: 90%; max-width: 400px; }
+        .login-box h2 { font-size: 1.4rem; margin-bottom: 20px; color: #333; }
+        .login-box input { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 6px; text-align: center; font-size: 1rem; }
+        .login-box button { background-color: #ff6a00; color: white; border: none; width: 100%; padding: 12px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+        .admin-content-secure { display: none; width: 90%; max-width: 600px; margin: 20px auto; }
+    </style>
+</head>
+<body class="login-body">
+
+    <div class="login-box" id="loginBox">
+        <h2>🔒 منطقة محمية - دخول الإدارة</h2>
+        <input type="password" id="adminPassword" placeholder="أدخل كلمة مرور المدير">
+        <button onclick="checkAdminPassword()">دخول</button>
+    </div>
+
+    <div class="admin-content-secure" id="secureAdminPanel">
+        <div class="admin-card" style="display: block; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+            <h3 style="text-align: center; color: #ff6a00; font-size: 1.4rem;">🦁 لوحة تحكم متجر ليون الإدارية</h3>
+            <p style="text-align: center; font-size: 0.9rem; color: #666; margin-bottom: 20px;">مرحباً بك أيها المدير. يمكنك هنا التحكم بالمخزن والأكواد.</p>
+            
+            <div class="admin-sub-section">
+                <h4>✨ إضافة كود خصم جديد للزبائن</h4>
+                <input type="text" id="newCouponCode" placeholder="كود الخصم (مثال: LION50)">
+                <input type="number" id="newCouponPercent" placeholder="النسبة %" min="1" max="100">
+                <input type="number" id="newCouponLimit" placeholder="عدد مرات الاستخدام المسموحة" min="1">
+                <button onclick="addNewCoupon()" style="background-color: #ff6a00;">إضافة وتفعيل الكود</button>
+            </div>
+
+            <div class="admin-sub-section">
+                <h4>📦 تحديث كميات المنتجات في المخزن</h4>
+                <select id="productSelectAdmin">
+                    </select>
+                <input type="number" id="newProductQty" placeholder="الكمية التي تريد إضافتها" min="1">
+                <button onclick="addProductStock()" style="background-color: #333;">تحديث الكمية المتاحة</button>
+            </div>
+            
+            <button onclick="window.location.href='index.html'" style="background-color: #777; color: white; border: none; width: 100%; padding: 10px; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 15px;">العودة للمتجر الرئيسي ←</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        function checkAdminPassword() {
+            const passInput = document.getElementById("adminPassword").value;
+            
+            // كلمة مرور الدخول الافتراضية هي: lion2026 يمكنك تعديلها من هنا بأي وقت
+            if(passInput === "lion2026") { 
+                document.getElementById("loginBox").style.display = "none";
+                document.getElementById("secureAdminPanel").style.display = "block";
+                document.body.classList.remove("login-body"); // تعديل التنسيق بعد الدخول
+                
+                if(typeof populateAdminProductSelect === "function") {
+                    populateAdminProductSelect();
+                }
+            } else {
+                alert("❌ كلمة المرور غير صحيحة!");
+                window.location.href = "index.html"; 
+            }
+        }
+    </script>
+</body>
+</html>
